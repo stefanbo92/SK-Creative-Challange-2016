@@ -3,8 +3,9 @@
 import rospy
 import cv2
 import numpy as np
-from std_msgs.msg import String
 import time
+import classification
+import operator
 
 
 
@@ -15,7 +16,7 @@ approxAccuracy=0.03
 
 def talker():
     
-    pub = rospy.Publisher('chatter', String, queue_size=10)
+    #pub = rospy.Publisher('chatter', String, queue_size=10)
     rospy.init_node('detector', anonymous=True)
     cap=cv2.VideoCapture(0)
   
@@ -94,19 +95,23 @@ def talker():
 
         # traw corners of filtered bounding boxes and extract the warped boxes
         warp= np.zeros((saveSize,saveSize,1), np.uint8)
+        warpedSquares=[]
         #cv2.drawContours(img,contoursFiltered,-1,(0,255,0),1)
         for i in range(len(filteredBoxes)):
+            print ("Box corners: ")
+            print filteredBoxes[i]
             cv2.circle(img,(int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), 2, (0,0,255), -1)
             cv2.circle(img,(int(filteredBoxes[i][1][0]),int(filteredBoxes[i][1][1])), 2, (0,0,255), -1)
             cv2.circle(img,(int(filteredBoxes[i][2][0]),int(filteredBoxes[i][2][1])), 2, (0,0,255), -1)
             cv2.circle(img,(int(filteredBoxes[i][3][0]),int(filteredBoxes[i][3][1])), 2, (0,0,255), -1)
 
-            #corners from lower right-> lower left -> upper left -> upper right
-            newCorners = np.float32([[saveSize,saveSize],[0,saveSize],[0,0],[saveSize,0]])
+            #corners from lower left-> upper left -> upper right -> lower right
+            newCorners = np.float32([[0,saveSize],[0,0],[saveSize,0],[saveSize,saveSize]])
             imageCorners = np.float32([[filteredBoxes[i][0][0],filteredBoxes[i][0][1]],[filteredBoxes[i][1][0],filteredBoxes[i][1][1]],[filteredBoxes[i][2][0],filteredBoxes[i][2][1]],[filteredBoxes[i][3][0],filteredBoxes[i][3][1]]])
             #get perspective transform
             H = cv2.getPerspectiveTransform(imageCorners,newCorners)
             warp = cv2.warpPerspective(gray,H,(saveSize+1,saveSize+1))
+            warpedSquares.append(warp)
             #otsu filtering
             blurSign = cv2.GaussianBlur(warp,(5,5),0)
             ret2,otsu = cv2.threshold(blurSign,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
@@ -115,8 +120,27 @@ def talker():
             saveCount+=1
             if saveCount>50:
                 saveCount=0
-            
 
+
+        correlations=classification.classify(warpedSquares)
+        print correlations
+        #draw results into image
+        for i in range(len(warpedSquares)):
+            index, value=max(enumerate(correlations[i]), key=operator.itemgetter(1))
+            if value>0.95:
+                className=""
+                if index==0:  
+                    className="left"
+                elif index ==1:
+                    className="down"
+                elif index ==2:
+                    className="right"
+                elif index ==3:
+                    className="up"
+                else:
+                    className="???"
+                cv2.putText(img, className, (int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,0),2)
+                
             
         # show images and print time
         cv2.imshow("Thresh", threshImg)

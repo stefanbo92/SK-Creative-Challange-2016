@@ -7,6 +7,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
 
+
 def imgPublisher():
     #create image publisher
     image_pub = rospy.Publisher('img_topic', Image, queue_size=10)
