@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import cv2
+import numpy as np
 
 def classify(img):
     # define all templates
@@ -17,10 +18,12 @@ def classify(img):
         corr=[]
         # test each template
         for j in range (len(template)):
-            res = cv2.matchTemplate(img[i],template[j],cv2.TM_CCORR_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            #res = cv2.matchTemplate(img[i],template[j],cv2.TM_CCORR_NORMED)
+            #min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            max_val=np.sum(np.square(np.subtract(np.asarray(img[i]),np.asarray(template[j]))))
             corr.append(max_val)
         # save correlation value for each template for every image
         out.append(corr)
     return out
+
 

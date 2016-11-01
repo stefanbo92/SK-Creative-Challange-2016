@@ -6,6 +6,7 @@ import numpy as np
 import time
 import classification
 import operator
+import math
 
 
 
@@ -61,6 +62,9 @@ def talker():
                      #save bounding boxes with the right aspect ratio
                      contoursFiltered.append(sign)
                      r = cv2.cv.BoxPoints(rect)
+                     #print "Box corners:"
+                     r=orderCorners(r)
+                     #print r
                      boxes.append(r)
                      
 
@@ -79,7 +83,7 @@ def talker():
                     #print abs(dist)
                     #print cv2.norm((pt1-np.array([boxes[j][0][0],boxes[j][0][1]])))
                     # delete boxes that too close, choosing the inner box
-                    if (i!=j) and abs(dist)<50 and dist<0:
+                    if (i!=j) and abs(dist)<100 and dist>0:
                         toDelete.append(j)
 
         #print ("zu loeschen:")
@@ -89,45 +93,49 @@ def talker():
             if i not in toDelete:
                 filteredBoxes.append(boxes[i])
 
-        print ("Number of Boxes after filter:")
-        print len(filteredBoxes)
+        #print ("Number of Boxes after filter:")
+        #print len(filteredBoxes)
         
 
-        # traw corners of filtered bounding boxes and extract the warped boxes
+        # draw corners of filtered bounding boxes and extract the warped boxes
         warp= np.zeros((saveSize,saveSize,1), np.uint8)
         warpedSquares=[]
         #cv2.drawContours(img,contoursFiltered,-1,(0,255,0),1)
         for i in range(len(filteredBoxes)):
             print ("Box corners: ")
             print filteredBoxes[i]
-            cv2.circle(img,(int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), 2, (0,0,255), -1)
+            cv2.circle(img,(int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), 2, (255,0,0), -1)
             cv2.circle(img,(int(filteredBoxes[i][1][0]),int(filteredBoxes[i][1][1])), 2, (0,0,255), -1)
             cv2.circle(img,(int(filteredBoxes[i][2][0]),int(filteredBoxes[i][2][1])), 2, (0,0,255), -1)
             cv2.circle(img,(int(filteredBoxes[i][3][0]),int(filteredBoxes[i][3][1])), 2, (0,0,255), -1)
 
-            #corners from lower left-> upper left -> upper right -> lower right
-            newCorners = np.float32([[0,saveSize],[0,0],[saveSize,0],[saveSize,saveSize]])
+            #corners from upper left-> lower left -> lower right -> upper right
+            newCorners = np.float32([[0,0],[0,saveSize],[saveSize,saveSize],[saveSize,0]])
             imageCorners = np.float32([[filteredBoxes[i][0][0],filteredBoxes[i][0][1]],[filteredBoxes[i][1][0],filteredBoxes[i][1][1]],[filteredBoxes[i][2][0],filteredBoxes[i][2][1]],[filteredBoxes[i][3][0],filteredBoxes[i][3][1]]])
             #get perspective transform
             H = cv2.getPerspectiveTransform(imageCorners,newCorners)
             warp = cv2.warpPerspective(gray,H,(saveSize+1,saveSize+1))
-            warpedSquares.append(warp)
+            #warpedSquares.append(warp)
             #otsu filtering
             blurSign = cv2.GaussianBlur(warp,(5,5),0)
             ret2,otsu = cv2.threshold(blurSign,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+            warpedSquares.append(otsu)
             #save image
-            cv2.imwrite("img/"+str(saveCount)+".png",otsu)
+            #cv2.imwrite("img/"+str(saveCount)+".png",otsu)
             saveCount+=1
             if saveCount>50:
                 saveCount=0
 
 
         correlations=classification.classify(warpedSquares)
-        print correlations
+        #print correlations
         #draw results into image
         for i in range(len(warpedSquares)):
-            index, value=max(enumerate(correlations[i]), key=operator.itemgetter(1))
-            if value>0.95:
+            index, value=min(enumerate(correlations[i]), key=operator.itemgetter(1))
+            print "Correlations:"
+            print correlations [i]
+            #print ("min value: "+str(value))
+            if value< 2500: #if value>0.95:
                 className=""
                 if index==0:  
                     className="left"
@@ -140,7 +148,7 @@ def talker():
                 else:
                     className="???"
                 cv2.putText(img, className, (int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,0),2)
-                
+                #cv2.imwrite("img/"+className+str(saveCount)+".png",warpedSquares[i])
             
         # show images and print time
         cv2.imshow("Thresh", threshImg)
@@ -154,10 +162,22 @@ def talker():
         #hello_str = "hello world %s" % rospy.get_time()
         #rospy.loginfo(hello_str)
         #pub.publish(hello_str)
-              
+
+
+def orderCorners(corners):
+    meanX = sum(x[0] for x in corners) / 4
+    meanY = sum(x[1] for x in corners) / 4   
+
+    def getKey(item):
+        return math.atan2(item[0] - meanX, item[1] - meanY)
+
+    return sorted(corners, key=getKey)
+    
 
 if __name__ == '__main__':
     try:
         talker()
     except rospy.ROSInterruptException:
         pass
+
+
