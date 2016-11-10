@@ -75,15 +75,11 @@ class SensorReader:
 
     # reads the GPIO pins and returns an array with unfiltered sensor readings
     def getCurrentValues(self):
-        # read the raw current GPIO values
-        rawLeft=readUltrasonic(self.triggerLeft,self.echoLeft)
-        rawRight=readUltrasonic(self.triggerRight,self.echoRight)
-        rawFront=readUltrasonic(self.triggerFront,self.echoFront)
-        # calculate distance in cm
-        valueLeft=rawLeft/1
-        valueRight=rawRight/1
-        valueFront=rawFront/1
-        # save the sensor readings in an array and returns it
+        # read the raw distance values in cm
+        valueLeft=readUltrasonic(self.triggerLeft,self.echoLeft)
+        valueRight=readUltrasonic(self.triggerRight,self.echoRight)
+        valueFront=readUltrasonic(self.triggerFront,self.echoFront)
+        # save the sensor readings in an array and return it
         values=np.array([valueLeft,valueRight,valueFront])
         return values
 
@@ -96,6 +92,7 @@ class SensorReader:
         GPIO.output(trigger, False)
         start = time.time()
 
+        # wait for echo
         while GPIO.input(echo)==0:
           start = time.time()
 
