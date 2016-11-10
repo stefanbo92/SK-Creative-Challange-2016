@@ -5,8 +5,9 @@
 ##    distances in cm of left, right and front sensor:
 ##
 ##        mc=MazeControl()
+##        sr=SensorReader(5)
 ##        while True:
-##            ul,ur,uf =getSensorReadings()
+##            ul,ur,uf =sr.getSensorReadings()
 ##            mc.moveMaze(ul,ur,uf)
 ##
    
@@ -18,15 +19,15 @@ class MazeControl:
 
     def __init__(self):
         #specify params
-        forwardSpeed=0.6
-        turnSpeed=0.8
-        turnTime=1.0
+        self.forwardSpeed=0.6
+        self.turnSpeed=0.8
+        self.turnTime=1.0
 
         #init all pins
-        velLeftPin=1
-        dirLeftPin=2
-        velRightPin=3
-        dirRightPin=4
+        self.velLeftPin=1
+        self.dirLeftPin=2
+        self.velRightPin=3
+        self.dirRightPin=4
         wiringpi.wiringPiSetupGpio()
         wiringpi.pinMode(velLeftPin, 2)
         wiringpi.pinMode(dirLeftPin, 2)
@@ -40,18 +41,18 @@ class MazeControl:
 
     # ul, ur, uf are filtered ultrasonic distances in cm of left,
     # right and front sensor
-    def moveMaze(ul,ur,uf):
+    def moveMaze(self,ul,ur,uf):
         # edit for better algorithm
         if uf>3:
-            moveForward(ul,ur,uf)
+            self.moveForward(ul,ur,uf)
         elif ul>5:
-            turnLeft()
+            self.turnLeft()
         elif ur>5:
-            turnRight()
+            self.turnRight()
         else:
-            turnBack()
+            self.turnBack()
 
-    def moveForward(ul,ur,uf):
+    def moveForward(self,ul,ur,uf):
         if ul<2:
             #turn left wheel more
             wiringpi.digitalWrite(motorLeftPin, turnSpeed)
@@ -63,7 +64,7 @@ class MazeControl:
             wiringpi.digitalWrite(motorLeftPin, forwardSpeed)
             wiringpi.digitalWrite(motorRightPin, forwardSpeed)
 
-    def turnLeft():
+    def turnLeft(self):
         #turn right wheel forward
         wiringpi.digitalWrite(motorRightPin, turnSpeed)
         #turn left wheel backward
@@ -76,7 +77,7 @@ class MazeControl:
         wiringpi.digitalWrite(dirLeftPin, 1.)
         wiringpi.digitalWrite(motorLeftPin, 0.)
 
-    def turnRight():
+    def turnRight(self):
         #turn right wheel backward
         wiringpi.digitalWrite(dirRightPin, 0)
         wiringpi.digitalWrite(motorRightPin, turnSpeed)
@@ -89,7 +90,7 @@ class MazeControl:
         wiringpi.digitalWrite(dirRightPin, 1.)
         wiringpi.digitalWrite(motorRightPin, 0.)
 
-    def turnBack():
+    def turnBack(self):
         #turn right wheel backward
         wiringpi.digitalWrite(dirRightPin, 0)
         wiringpi.digitalWrite(motorRightPin, turnSpeed)
@@ -101,6 +102,14 @@ class MazeControl:
         wiringpi.digitalWrite(motorLeftPin, 0.)
         wiringpi.digitalWrite(dirRightPin, 1.)
         wiringpi.digitalWrite(motorRightPin, 0.)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Reset GPIO settings
+        #GPIO.cleanup()
+        wiringpi.pinMode(velLeftPin, 0)
+        wiringpi.pinMode(dirLeftPin, 0)
+        wiringpi.pinMode(velRightPin, 0)
+        wiringpi.pinMode(dirRightPin, 0)
     
 
 
