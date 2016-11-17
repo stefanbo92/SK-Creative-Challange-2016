@@ -76,9 +76,9 @@ class SensorReader:
     # reads the GPIO pins and returns an array with unfiltered sensor readings
     def getCurrentValues(self):
         # read the raw distance values in cm
-        valueLeft=self.readUltrasonic(self.triggerLeft,self.echoLeft)
-        valueRight=0#self.readUltrasonic(self.triggerRight,self.echoRight)
-        valueFront=0#self.readUltrasonic(self.triggerFront,self.echoFront)
+        valueLeft=readUltrasonic(self.triggerLeft,self.echoLeft)
+        valueRight=0#readUltrasonic(self.triggerRight,self.echoRight)
+        valueFront=0#readUltrasonic(self.triggerFront,self.echoFront)
         # save the sensor readings in an array and return it
         values=np.array([valueLeft,valueRight,valueFront])
         return values
@@ -91,14 +91,12 @@ class SensorReader:
         time.sleep(0.00001)
         GPIO.output(trigger, False)
         start = time.time()
-        start1=time.time()
 
         # wait for echo
-        while GPIO.input(echo)==0 and start1-start<0.1:
+        while GPIO.input(echo)==0:
           start = time.time()
 
-        stop = time.time()
-        while GPIO.input(echo)==1 and stop-start<0.00583:
+        while GPIO.input(echo)==1:
           stop = time.time()
 
         # Calculate pulse length
