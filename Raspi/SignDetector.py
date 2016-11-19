@@ -33,7 +33,7 @@ class SignDetector():
         kernel=np.ones((5,5),np.uint8)
         thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
         thresh = cv2.erode(thresh,kernel,iterations = 1)
-        threshImg=thresh.copy()
+        #threshImg=thresh.copy()
         #find contours
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         contours = sorted(contours, key=cv2.contourArea,reverse=True)[:numContrours]
@@ -52,15 +52,14 @@ class SignDetector():
              if (len(approx)==4) and cv2.contourArea(approx) > 1000 and cv2.isContourConvex(approx):
                  # get bounding rectangle for contour and calculate aspect ratio 
                  rect = cv2.minAreaRect(sign)
-                 (x, y, w, h) = cv2.boundingRect(approx)
-                 ar = w / float(h)
+                 contoursFiltered.append(sign)
+                 #get rectangle corners and sort them
+                 r = self.orderCorners(cv2.cv.BoxPoints(rect))
+                 w=cv2.norm(r[0],r[3])
+                 h=cv2.norm(r[0],r[1])
+                 ar = w / float(h) 
                  if 0.9<ar<1.1:
                      #save bounding boxes with the right aspect ratio
-                     contoursFiltered.append(sign)
-                     r = cv2.cv.BoxPoints(rect)
-                     #print "Box corners:"
-                     r=self.orderCorners(r)
-                     #print r
                      boxes.append(r)
                      
 
@@ -96,8 +95,8 @@ class SignDetector():
         warpedSquares=[]
         #cv2.drawContours(img,contoursFiltered,-1,(0,255,0),1)
         for i in range(len(filteredBoxes)):
-            print ("Box corners: ")
-            print filteredBoxes[i]
+            #print ("Box corners: ")
+            #print filteredBoxes[i]
             cv2.circle(img,(int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), 2, (255,0,0), -1)
             cv2.circle(img,(int(filteredBoxes[i][1][0]),int(filteredBoxes[i][1][1])), 2, (0,0,255), -1)
             cv2.circle(img,(int(filteredBoxes[i][2][0]),int(filteredBoxes[i][2][1])), 2, (0,0,255), -1)
@@ -122,7 +121,7 @@ class SignDetector():
 
 
         correlations=self.sc.classify(warpedSquares)
-        print correlations
+        #print correlations
 ##        #print correlations
 ##        #draw results into image
 ##        for i in range(len(warpedSquares)):
@@ -149,7 +148,7 @@ class SignDetector():
         cv2.imshow("Image", img)
         #cv2.imshow("Thresh", threshImg)
         #cv2.imshow("warp", warp)    
-        print("Time: %s milliseconds" % ((time.time() - start_time)*1000)) 
+        print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
         print ("_________________________")
         cv2.waitKey(1)
         if len(correlations)>0:
