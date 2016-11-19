@@ -9,11 +9,11 @@ if __name__ == '__main__':
     while True:
         try:
             start=time.time()
-            ul,ur,uf =1,2,3#sr.getSensorReadings()      
+            ul,ur,uf =sr.getSensorReadings()      
             print ("Distance left: "+str(ul)+"cm")
             mc.moveMaze(ul,ur,uf)
             stop=time.time() 
-            print ("time: "+str((stop-start)*1000)+"ms")
+            print ("total time: "+str((stop-start)*1000)+"ms")
         except KeyboardInterrupt:
             mc.kill()
             sr.kill()

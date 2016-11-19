@@ -53,9 +53,8 @@ class MazeControl:
             self.detectionMode=0
         else:
             #make sign detection
-            self.detectionMode=0
-            self.sd.detect()
-            #self.moveDefault(ul,ur,uf)
+            #self.detectionMode=self.sd.detect()
+            self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
     def moveDefault(self,ul,ur,uf):
