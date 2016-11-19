@@ -12,17 +12,18 @@ saveSize=100
 numContrours=1000
 approxAccuracy=0.03
 
-def talker():
-    
-    cap=cv2.VideoCapture(0)
-  
-    saveCount=0
-    #while not True:
-    while True:
+class SignDetector():
+
+    def __init__(self):
+        self.cap=cv2.VideoCapture(0)
+        self.saveCount=0
+        self.sc=classification.SignClassifier()
+
+    def detect(self):
         start_time = time.time()
 
         #get image, turn to grayscale, median blur and perform adaptive threshold 
-        ret,img=cap.read()
+        ret,img=self.cap.read()
         #img=res = cv2.resize(img,(img.shape[1]/2, img.shape[1]/2), interpolation = cv2.INTER_CUBIC)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         blur = cv2.medianBlur(gray,5)
@@ -58,7 +59,7 @@ def talker():
                      contoursFiltered.append(sign)
                      r = cv2.cv.BoxPoints(rect)
                      #print "Box corners:"
-                     r=orderCorners(r)
+                     r=self.orderCorners(r)
                      #print r
                      boxes.append(r)
                      
@@ -114,13 +115,13 @@ def talker():
             ret2,otsu = cv2.threshold(blurSign,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             warpedSquares.append(otsu)
             #save image
-            #cv2.imwrite("img/"+str(saveCount)+".png",otsu)
-            saveCount+=1
-            if saveCount>50:
-                saveCount=0
+            #cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
+            self.saveCount+=1
+            if self.saveCount>50:
+                self.saveCount=0
 
 
-        correlations=classification.classify(warpedSquares)
+        correlations=self.sc.classify(warpedSquares)
         print correlations
 ##        #print correlations
 ##        #draw results into image
@@ -145,26 +146,36 @@ def talker():
 ##                #cv2.imwrite("img/"+className+str(saveCount)+".png",warpedSquares[i])
 ##            
 ##        # show images and print time
-##        cv2.imshow("Thresh", threshImg)
-##        cv2.imshow("Image", img)
+        cv2.imshow("Image", img)
+        #cv2.imshow("Thresh", threshImg)
         #cv2.imshow("warp", warp)    
         print("Time: %s milliseconds" % ((time.time() - start_time)*1000)) 
         print ("_________________________")
         cv2.waitKey(1)
 
+    def orderCorners(self,corners):
+        meanX = sum(x[0] for x in corners) / 4
+        meanY = sum(x[1] for x in corners) / 4   
 
+        def getKey(item):
+            return math.atan2(item[0] - meanX, item[1] - meanY)
 
-def orderCorners(corners):
-    meanX = sum(x[0] for x in corners) / 4
-    meanY = sum(x[1] for x in corners) / 4   
+        return sorted(corners, key=getKey)
 
-    def getKey(item):
-        return math.atan2(item[0] - meanX, item[1] - meanY)
-
-    return sorted(corners, key=getKey)
+    def kill(self):
+        self.cap.release()
+        cv2.destroyAllWindows()
     
 
 if __name__ == '__main__':
-    talker()
+    sd=SignDetector()
+    while True:
+        try:
+            sd.detect()
+        except KeyboardInterrupt:
+            sd.kill()
+            raise
+        
+    
 
 
