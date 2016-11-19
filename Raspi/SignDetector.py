@@ -172,14 +172,14 @@ class SignDetector():
         cv2.destroyAllWindows()
     
 
-if __name__ == '__main__':
-    sd=SignDetector()
-    while True:
-        try:
-            sd.detect()
-        except KeyboardInterrupt:
-            sd.kill()
-            raise
+#if __name__ == '__main__':
+#    sd=SignDetector()
+#    while True:
+#        try:
+#            sd.detect()
+#        except KeyboardInterrupt:
+#            sd.kill()
+#            raise
         
     
 

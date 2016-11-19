@@ -21,7 +21,7 @@ class MazeControl:
 
     def __init__(self):
         #create Motor controller
-        #mc=MotorControl.MotorControl()
+        self.mc=MotorControl.MotorControl()
         self.sd=SignDetector.SignDetector()
 
         # init object detection
@@ -49,45 +49,46 @@ class MazeControl:
             self.moveDefault(ul,ur,uf)
         elif self.detectionMode==4:
             #turn around
-            mc.turnBack()
+            self.mc.turnBack()
             self.detectionMode=0
         else:
             #make sign detection
-            self.detectionMode=self.sd.detect()
-            self.moveDefault(ul,ur,uf)
+            self.detectionMode=0
+            self.sd.detect()
+            #self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
     def moveDefault(self,ul,ur,uf):
         if uf>3:
-            mc.moveForward(ul,ur,uf)
+            self.mc.moveForward(ul,ur,uf)
         elif ul>5:
-            mc.turnLeft()
+            self.mc.turnLeft()
         elif ur>5:
-            mc.turnRight()
+            self.mc.turnRight()
         else:
-            mc.turnBack()
+            self.mc.turnBack()
 
     # left sign detected: go straight until you can turn left, then turn
     def keepLeft(self,ul,ur,uf):
         if ul<5:
-            mc.moveForward(ul,ur,uf)
+            self.mc.moveForward(ul,ur,uf)
         else:
             #time.sleep(0.3)
-            mc.turnLeft()
+            self.mc.turnLeft()
             self.detectionMode=0
 
     # right sign detected: go straight until you can turn right, then turn
     def keepRight(self,ul,ur,uf):
         if ur<5:
-            mc.moveForward(ul,ur,uf)
+            self.mc.moveForward(ul,ur,uf)
         else:
-            mc.turnRight()
+            self.mc.turnRight()
             self.detectionMode=0
 
     def kill(self):
         # Reset GPIO settings
-        mc.kill()
-        sd.kill()
+        self.mc.kill()
+        self.sd.kill()
         
     
 

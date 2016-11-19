@@ -51,6 +51,7 @@ class SensorReader:
 ##        GPIO.output(self.triggerFront, False)
         # Allow module to settle
         time.sleep(0.5)
+        print "SensorReader created!"
 
 
     # returns the filtered sensor readings ul, ur and uf
@@ -94,7 +95,7 @@ class SensorReader:
         start1=time.time()
 
         # wait for echo
-        while GPIO.input(echo)==0 and start1-start<0.1:
+        while GPIO.input(echo)==0 and start-start1<0.1:
           start = time.time()
 
         stop = time.time()
@@ -102,16 +103,17 @@ class SensorReader:
           stop = time.time()
 
         # Calculate pulse length
-        elapsed = stop-start
+        #elapsed = stop-start
 
         # Distance pulse travelled in that time is time
-        # multiplied by the speed of sound (cm/s), defived
+        # multiplied by the speed of sound (cm/s), devided
         # by two since the sound did twice the distance
-        distance = (elapsed * 34300)/2
+        #distance = ((stop-start) * 34300)/2
+        distance = (stop-start) * 17150
         
         return round(distance,2)
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def kill(self):
         # Reset GPIO settings
         GPIO.cleanup()
 
