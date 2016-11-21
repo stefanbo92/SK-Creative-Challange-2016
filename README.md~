@@ -11,19 +11,14 @@ python main.py
 ### Python classes
 
 #### MazeControl.py
-This program guides the ship through the maze by using ultrasonic sensors and sign detection.
 
 #### MotorControl.py
-This program controlls the two motors to drive straight, turn left and right or turn back.
 
 #### SensorReader.py
-This program will read out all the three ultrasonic sensors and also applies a median filter to the measurements.
 
 #### SignDetector.py
-This program performs computer vision algorithms to detect the signs in the maze.
 
 #### classification.py
-Helper class for the SignDetector. It compares the captured images with templates.
 
 
 ##ROS
