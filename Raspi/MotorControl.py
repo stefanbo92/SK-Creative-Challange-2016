@@ -35,10 +35,10 @@ class MotorControl:
         GPIO.output(self.dirRightPin, 1)
         
     def moveForward(self,ul,ur,uf):
-        if ul<2:
+        if ul<5:
             #turn left wheel more
             self.pwmLeft.ChangeDutyCycle(self.turnSpeed)
-        elif ul>4 and ul<20:
+        elif ul>6 and ul<20:
             #turn right wheel more
             self.pwmRight.ChangeDutyCycle(self.turnSpeed)
         else:
