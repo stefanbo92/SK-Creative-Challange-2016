@@ -30,25 +30,25 @@ class SensorReader:
         self.readingsFront=np.zeros(size)
 
         # Define GPIO to use on Pi
-        self.triggerLeft=22 #pin15
-        self.echoLeft=23 #pin16
-        self.triggerRight=3
-        self.echoRight=4
-        self.triggerFront=5
-        self.echoFront=6
+        self.triggerLeft=2 #pin3
+        self.echoLeft=3 #pin5
+        self.triggerRight=17 #pin11
+        self.echoRight=18 #pin12
+        self.triggerFront=22 #pin15
+        self.echoFront=23 #pin16
 
         # Set pins as output and input
         GPIO.setup(self.triggerLeft,GPIO.OUT)  
         GPIO.setup(self.echoLeft,GPIO.IN)
-##        GPIO.setup(self.triggerRight,GPIO.OUT)  
-##        GPIO.setup(self.echoRight,GPIO.IN)
-##        GPIO.setup(self.triggerFront,GPIO.OUT)  
-##        GPIO.setup(self.echoFront,GPIO.IN)  
+        GPIO.setup(self.triggerRight,GPIO.OUT)  
+        GPIO.setup(self.echoRight,GPIO.IN)
+        GPIO.setup(self.triggerFront,GPIO.OUT)  
+        GPIO.setup(self.echoFront,GPIO.IN)  
 
         # Set trigger to False (Low)
         GPIO.output(self.triggerLeft, False)
-##        GPIO.output(self.triggerRight, False)
-##        GPIO.output(self.triggerFront, False)
+        GPIO.output(self.triggerRight, False)
+        GPIO.output(self.triggerFront, False)
         # Allow module to settle
         time.sleep(0.5)
         print "SensorReader created!"

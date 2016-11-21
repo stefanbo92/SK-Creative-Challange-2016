@@ -15,10 +15,10 @@ class MotorControl:
         self.turnTime=1.0
 
         #init all pins
-        self.velLeftPin=1
-        self.dirLeftPin=2
-        self.velRightPin=3
-        self.dirRightPin=4
+        self.velLeftPin=9 #pin21
+        self.dirLeftPin=25 #pin22
+        self.velRightPin=11 #pin23
+        self.dirRightPin=8 #pin24
         GPIO.setup(self.velLeftPin,GPIO.OUT)  
         GPIO.setup(self.dirLeftPin,GPIO.OUT)
         GPIO.setup(self.velRightPin,GPIO.OUT)  
