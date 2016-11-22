@@ -70,37 +70,29 @@ class SignDetector():
         toDelete =[]
         for i in range (len(boxes)):
             if i not in toDelete:
-                #print ("Point "+str(i)+":")
-                pt1=np.array([boxes[i][0][0],boxes[i][0][1]])
                 for j in range (len(boxes)):           
                     dist=boxes[i][0][0]-boxes[j][0][0]+boxes[i][0][1]-boxes[j][0][1]
-                    #print ("Abs:")
-                    #print abs(dist)
-                    #print cv2.norm((pt1-np.array([boxes[j][0][0],boxes[j][0][1]])))
                     # delete boxes that too close, choosing the inner box
                     if (i!=j) and abs(dist)<100 and dist>0:
                         toDelete.append(j)
 
+        # actually delete the supressed boxes
         filteredBoxes=[]
         for i in range(len(boxes)):
             if i not in toDelete:
                 filteredBoxes.append(boxes[i])
 
-        #print ("Number of Boxes after filter:")
-        #print len(filteredBoxes)
-        
-
         # draw corners of filtered bounding boxes and extract the warped boxes
-        warp= np.zeros((saveSize,saveSize,1), np.uint8)
+        warp=np.zeros((saveSize,saveSize,1), np.uint8)
         warpedSquares=[]
         #cv2.drawContours(img,contoursFiltered,-1,(0,255,0),1)
         for i in range(len(filteredBoxes)):
             #print ("Box corners: ")
             #print filteredBoxes[i]
-            cv2.circle(img,(int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), 2, (255,0,0), -1)
-            cv2.circle(img,(int(filteredBoxes[i][1][0]),int(filteredBoxes[i][1][1])), 2, (0,0,255), -1)
-            cv2.circle(img,(int(filteredBoxes[i][2][0]),int(filteredBoxes[i][2][1])), 2, (0,0,255), -1)
-            cv2.circle(img,(int(filteredBoxes[i][3][0]),int(filteredBoxes[i][3][1])), 2, (0,0,255), -1)
+##            cv2.circle(img,(int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), 2, (255,0,0), -1)
+##            cv2.circle(img,(int(filteredBoxes[i][1][0]),int(filteredBoxes[i][1][1])), 2, (0,0,255), -1)
+##            cv2.circle(img,(int(filteredBoxes[i][2][0]),int(filteredBoxes[i][2][1])), 2, (0,0,255), -1)
+##            cv2.circle(img,(int(filteredBoxes[i][3][0]),int(filteredBoxes[i][3][1])), 2, (0,0,255), -1)
 
             #corners from upper left-> lower left -> lower right -> upper right
             newCorners = np.float32([[0,0],[0,saveSize],[saveSize,saveSize],[saveSize,0]])
@@ -114,10 +106,10 @@ class SignDetector():
             ret2,otsu = cv2.threshold(blurSign,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             warpedSquares.append(otsu)
             #save image
-            #cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
-            self.saveCount+=1
-            if self.saveCount>50:
-                self.saveCount=0
+##            cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
+##            self.saveCount+=1
+##            if self.saveCount>50:
+##                self.saveCount=0
 
 
         correlations=self.sc.classify(warpedSquares)
@@ -143,9 +135,9 @@ class SignDetector():
 ##                    className="???"
 ##                cv2.putText(img, className, (int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,0),2)
 ##                #cv2.imwrite("img/"+className+str(saveCount)+".png",warpedSquares[i])
-##            
-##        # show images and print time
-        cv2.imshow("Image", img)
+            
+        # show images and print time
+        #cv2.imshow("Image", img)
         #cv2.imshow("Thresh", threshImg)
         #cv2.imshow("warp", warp)    
         print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
@@ -171,14 +163,14 @@ class SignDetector():
         cv2.destroyAllWindows()
     
 
-#if __name__ == '__main__':
-#    sd=SignDetector()
-#    while True:
-#        try:
-#            sd.detect()
-#        except KeyboardInterrupt:
-#            sd.kill()
-#            raise
+##if __name__ == '__main__':
+##    sd=SignDetector()
+##    while True:
+##        try:
+##            sd.detect()
+##        except KeyboardInterrupt:
+##            sd.kill()
+##            raise
         
     
 
