@@ -5,6 +5,7 @@ import time
 import classification
 import operator
 import math
+#from pygame import mixer 
 
 
 #PARAMS
@@ -15,9 +16,14 @@ approxAccuracy=0.03
 class SignDetector():
 
     def __init__(self):
+        #init VideoCapture and SignClassifier
         self.cap=cv2.VideoCapture(0)
         self.saveCount=0
         self.sc=classification.SignClassifier()
+
+        #load music files
+        #mixer.init()
+        
 
     def detect(self):
         start_time = time.time()
@@ -147,6 +153,8 @@ class SignDetector():
         cv2.waitKey(1)
         if len(correlations)>0:
             index, value=min(enumerate(correlations[0]), key=operator.itemgetter(1))
+            #mixer.music.load(str(index+1)+'.mp3')
+            #mixer.music.play()
             return index+1
         else:
             return 0
