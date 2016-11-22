@@ -112,9 +112,11 @@ class SignDetector():
 ##                self.saveCount=0
 
 
+        #start_correlation = time.time()
         correlations=self.sc.classify(warpedSquares)
+        #print("Time for correlations: %s milliseconds" % ((time.time() - start_correlation)*1000))
         #print correlations
-##        #print correlations
+
 ##        #draw results into image
 ##        for i in range(len(warpedSquares)):
 ##            index, value=min(enumerate(correlations[i]), key=operator.itemgetter(1))
@@ -163,14 +165,14 @@ class SignDetector():
         cv2.destroyAllWindows()
     
 
-##if __name__ == '__main__':
-##    sd=SignDetector()
-##    while True:
-##        try:
-##            sd.detect()
-##        except KeyboardInterrupt:
-##            sd.kill()
-##            raise
+if __name__ == '__main__':
+    sd=SignDetector()
+    while True:
+        try:
+            sd.detect()
+        except KeyboardInterrupt:
+            sd.kill()
+            raise
         
     
 
