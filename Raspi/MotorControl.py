@@ -11,8 +11,8 @@ class MotorControl:
     def __init__(self):
         #specify params
         self.forwardSpeed=60
-        self.turnSpeed=80
-        self.turnTime=1.0
+        self.turnSpeed=20
+        self.turnTime=0.4
 
         #init all pins
         # vel=forward (A), dir=backward (B)
@@ -35,6 +35,12 @@ class MotorControl:
         self.pwmLeftB.start(0)
         self.pwmRightB.start(0)
         
+
+    def stop(self):
+        self.pwmLeftA.ChangeDutyCycle(0)
+        self.pwmRightA.ChangeDutyCycle(0)
+        self.pwmLeftB.ChangeDutyCycle(0)
+        self.pwmRightB.ChangeDutyCycle(0)
         
     def moveForward(self,ul,ur,uf):
         if ul<5:

@@ -18,7 +18,7 @@ if __name__ == '__main__':
             #print ("Distance front: "+str(uf)+"cm")
 
             # check motor movements
-            mc.mc.turnLeft()
+            #mc.mc.turnLeft()
             #mc.mc.turnRight()
             #mc.mc.turnBack()
             #mc.mc.moveForward(5.5,0,0) # just goes straight, no adjusting
@@ -30,7 +30,19 @@ if __name__ == '__main__':
             #sd.grabImage()
             
             print ("total time: "+str((time.time()-start)*1000)+"ms")
-            time.sleep(0.1)
+            mc.mc.moveForward(5.5,0,0)
+            time.sleep(0.7)
+            mc.mc.stop()
+            time.sleep(0.7)
+            mc.mc.turnBack()
+            time.sleep(0.7)
+            mc.mc.moveForward(5.5,0,0)
+            time.sleep(0.7)
+            mc.mc.stop()
+            time.sleep(0.7)
+            mc.mc.turnBack()
+            time.sleep(0.7)
+
         except KeyboardInterrupt:
             mc.kill()
             sr.kill()
