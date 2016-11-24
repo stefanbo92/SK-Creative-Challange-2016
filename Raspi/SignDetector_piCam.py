@@ -26,7 +26,7 @@ class SignDetector():
         # initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
         self.camera.resolution = (640, 480)
-        self.camera.framerate = 32
+        self.camera.framerate = 100
         self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
          
         # allow the camera to warmup
@@ -41,8 +41,9 @@ class SignDetector():
 
         #get image, turn to grayscale, median blur and perform adaptive threshold 
         #ret,img=self.cap.read()
-        self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)
+        self.camera.capture(self.rawCapture, format="bgr",use_video_port=True)
         img = self.rawCapture.array
+        #img=cv2.resize(img,(640, 480))
         #img=res = cv2.resize(img,(img.shape[1]/2, img.shape[1]/2), interpolation = cv2.INTER_CUBIC)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         blur = cv2.medianBlur(gray,5)
@@ -159,12 +160,13 @@ class SignDetector():
             
         # show images and print time
         #cv2.imshow("Image", img)
+        #cv2.imwrite("pic.png",img)
         #cv2.imshow("Thresh", threshImg)
         #cv2.imshow("warp", warp)    
         print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
         print ("_________________________")
         cv2.waitKey(1)
-	self.rawCapture.truncate(0)
+        self.rawCapture.truncate(0)
         if len(correlations)>0:
             index, value=min(enumerate(correlations[0]), key=operator.itemgetter(1))
             #mixer.music.load(str(index+1)+'.mp3')

@@ -145,7 +145,7 @@ class SignDetector():
 ##                #cv2.imwrite("img/"+className+str(saveCount)+".png",warpedSquares[i])
             
         # show images and print time
-        #cv2.imshow("Image", img)
+        cv2.imshow("Image", img)
         #cv2.imshow("Thresh", threshImg)
         #cv2.imshow("warp", warp)    
         print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
@@ -173,14 +173,14 @@ class SignDetector():
         cv2.destroyAllWindows()
     
 
-##if __name__ == '__main__':
-##    sd=SignDetector()
-##    while True:
-##        try:
-##            sd.detect()
-##        except KeyboardInterrupt:
-##            sd.kill()
-##            raise
+if __name__ == '__main__':
+    sd=SignDetector()
+    while True:
+        try:
+            print sd.detect()
+        except KeyboardInterrupt:
+            sd.kill()
+            raise
         
     
 
