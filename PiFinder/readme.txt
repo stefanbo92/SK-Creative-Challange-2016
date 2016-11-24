@@ -1,3 +1,10 @@
-run
-
+run:
 java -jar pi-oi.jar
+
+
+Then connect with:
+ssh pi@[IP-adress]
+
+
+Password:
+robot

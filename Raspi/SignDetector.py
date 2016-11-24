@@ -5,7 +5,7 @@ import time
 import classification
 import operator
 import math
-#from pygame import mixer 
+from pygame import mixer 
 
 
 #PARAMS
@@ -17,14 +17,19 @@ class SignDetector():
 
     def __init__(self):
         #init VideoCapture and SignClassifier
-        self.cap=cv2.VideoCapture(0)
+        #self.cap=cv2.VideoCapture(0)
         self.saveCount=0
         self.sc=classification.SignClassifier()
+        self.cap=cv2.VideoCapture(0)
+        #self.cap.set(CV_CAP_PROP_BUFFERSIZE, 3)
 
         #load music files
-        #mixer.init()
+        mixer.init()
         
-
+    #simple function to keep cap buffer updated
+    def grabImage(self):
+        ret,img=self.cap.read()
+        
     def detect(self):
         start_time = time.time()
 
@@ -123,14 +128,16 @@ class SignDetector():
         #print("Time for correlations: %s milliseconds" % ((time.time() - start_correlation)*1000))
         #print correlations
 
-##        #draw results into image
-##        for i in range(len(warpedSquares)):
-##            index, value=min(enumerate(correlations[i]), key=operator.itemgetter(1))
-##            print "Correlations:"
-##            print correlations [i]
-##            #print ("min value: "+str(value))
-##            if value< 2500: #if value>0.95:
-##                className=""
+        #draw results into image
+        output=0
+        for i in range(len(warpedSquares)):
+            index, value=min(enumerate(correlations[i]), key=operator.itemgetter(1))
+            #print "Correlations:"
+            print correlations [i]
+            #print ("min value: "+str(value))
+            if value< 2500: #if value>0.95:
+                className=""
+                output=index+1
 ##                if index==0:  
 ##                    className="left"
 ##                elif index ==1:
@@ -151,13 +158,10 @@ class SignDetector():
         print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
         print ("_________________________")
         cv2.waitKey(1)
-        if len(correlations)>0:
-            index, value=min(enumerate(correlations[0]), key=operator.itemgetter(1))
-            #mixer.music.load(str(index+1)+'.mp3')
+        if output != 0:
+            mixer.music.load("sounds/"+str(index+1)+'.mp3')
             #mixer.music.play()
-            return index+1
-        else:
-            return 0
+        return output
 
     def orderCorners(self,corners):
         meanX = sum(x[0] for x in corners) / 4
@@ -173,14 +177,16 @@ class SignDetector():
         cv2.destroyAllWindows()
     
 
-if __name__ == '__main__':
-    sd=SignDetector()
-    while True:
-        try:
-            print sd.detect()
-        except KeyboardInterrupt:
-            sd.kill()
-            raise
+##if __name__ == '__main__':
+##    sd=SignDetector()
+##
+##    while True:
+##        try:
+##            print sd.detect()
+##
+##        except KeyboardInterrupt:
+##            sd.kill()
+##            raise
         
     
 
