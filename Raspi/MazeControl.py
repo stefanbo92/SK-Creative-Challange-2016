@@ -38,6 +38,10 @@ class MazeControl:
     # ul, ur, uf are filtered ultrasonic distances in cm of left,
     # right and front sensor
     def moveMaze(self,ul,ur,uf):
+        #update buffer
+        self.sd.grabImage()
+
+        #check current state
         if self.detectionMode==1:
             # algorithm for keeping left
             self.keepLeft(ul,ur,uf)
