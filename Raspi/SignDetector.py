@@ -152,7 +152,7 @@ class SignDetector():
 ##                #cv2.imwrite("img/"+className+str(saveCount)+".png",warpedSquares[i])
             
         # show images and print time
-        cv2.imshow("Image", img)
+        #cv2.imshow("Image", img)
         #cv2.imshow("Thresh", threshImg)
         #cv2.imshow("warp", warp)    
         print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
