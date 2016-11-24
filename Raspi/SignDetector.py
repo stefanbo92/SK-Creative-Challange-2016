@@ -160,7 +160,9 @@ class SignDetector():
         cv2.waitKey(1)
         if output != 0:
             mixer.music.load("sounds/"+str(index+1)+'.mp3')
-            #mixer.music.play()
+            mixer.music.play()
+##            while mixer.music.get_busy() == True:
+##                self.grabImage()
         return output
 
     def orderCorners(self,corners):
