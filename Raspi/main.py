@@ -4,7 +4,7 @@ import time
 import SignDetector
 
 if __name__ == '__main__':
-    mc=MazeControl.MazeControl()
+    maze=MazeControl.MazeControl()
     sr=SensorReader.SensorReader(5)
     sd=SignDetector.SignDetector()
 	
@@ -30,17 +30,17 @@ if __name__ == '__main__':
             #sd.grabImage()
             
             print ("total time: "+str((time.time()-start)*1000)+"ms")
-            mc.mc.moveForward(5.5,0,0)
+            maze.mc.moveForward(5.5,0,0)
             time.sleep(0.7)
-            mc.mc.stop()
+            maze.mc.stop()
             time.sleep(0.7)
-            mc.mc.turnBack()
+            maze.mc.turnBack()
             time.sleep(0.7)
-            mc.mc.moveForward(5.5,0,0)
+            maze.mc.moveForward(5.5,0,0)
             time.sleep(0.7)
-            mc.mc.stop()
+            maze.mc.stop()
             time.sleep(0.7)
-            mc.mc.turnBack()
+            maze.mc.turnBack()
             time.sleep(0.7)
 
         except KeyboardInterrupt:
