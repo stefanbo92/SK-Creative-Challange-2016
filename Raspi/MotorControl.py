@@ -10,11 +10,12 @@ class MotorControl:
 
     def __init__(self):
         #specify params
-        self.forwardSpeed=0.6
-        self.turnSpeed=0.8
+        self.forwardSpeed=60
+        self.turnSpeed=80
         self.turnTime=1.0
 
         #init all pins
+        # vel=forward (A), dir=backward (B)
         self.velLeftPin=9 #pin21
         self.dirLeftPin=25 #pin22
         self.velRightPin=11 #pin23
@@ -25,70 +26,76 @@ class MotorControl:
         GPIO.setup(self.dirRightPin,GPIO.OUT)
 
         # init PWM pins
-        self.pwmLeft=GPIO.PWM(self.velLeftPin, 500) # 500Hz PWM
-        self.pwmRight=GPIO.PWM(self.velRightPin, 500)
-        self.pwmLeft.start(0)
-        self.pwmRight.start(0)
+        self.pwmLeftA=GPIO.PWM(self.velLeftPin, 50) # 50Hz PWM
+        self.pwmRightA=GPIO.PWM(self.velRightPin, 50)
+        self.pwmLeftA.start(0)
+        self.pwmRightA.start(0)
+        self.pwmLeftB=GPIO.PWM(self.dirLeftPin, 50) # 50Hz PWM
+        self.pwmRightB=GPIO.PWM(self.dirRightPin, 50)
+        self.pwmLeftB.start(0)
+        self.pwmRightB.start(0)
         
-        #initially set both motors to forward
-        GPIO.output(self.dirLeftPin, 1)
-        GPIO.output(self.dirRightPin, 1)
         
     def moveForward(self,ul,ur,uf):
         if ul<5:
             #turn left wheel more
-            self.pwmLeft.ChangeDutyCycle(self.turnSpeed)
+            self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)
         elif ul>6 and ul<20:
             #turn right wheel more
-            self.pwmRight.ChangeDutyCycle(self.turnSpeed)
+            self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
         else:
             #turn same speed
-            self.pwmLeft.ChangeDutyCycle(self.forwardSpeed)
-            self.pwmRight.ChangeDutyCycle(self.forwardSpeed)
+            self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+            self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
 
     def turnLeft(self):
+        #stop both wheels
+        self.pwmLeftA.ChangeDutyCycle(0)
+        self.pwmRightA.ChangeDutyCycle(0)
         #turn right wheel forward
-        self.pwmRight.ChangeDutyCycle(self.turnSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel backward
-        GPIO.output(self.dirLeftPin, 0)
-        self.pwmLeft.ChangeDutyCycle(self.turnSpeed)
+        self.pwmLeftB.ChangeDutyCycle(self.turnSpeed)
         #wait
         time.sleep(self.turnTime)
         # stop both wheels
-        self.pwmRight.ChangeDutyCycle(0)
-        GPIO.output(self.dirLeftPin, 1)
-        self.pwmLeft.ChangeDutyCycle(0)
+        self.pwmRightA.ChangeDutyCycle(0)
+        self.pwmLeftB.ChangeDutyCycle(0)
 
     def turnRight(self):
+        #stop both wheels
+        self.pwmLeftA.ChangeDutyCycle(0)
+        self.pwmRightA.ChangeDutyCycle(0)
         #turn right wheel backward
-        GPIO.output(self.dirRightPin, 0)
-        self.pwmRight.ChangeDutyCycle(self.turnSpeed)
+        self.pwmRightB.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel forward
-        self.pwmLeft.ChangeDutyCycle(self.turnSpeed)
+        self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)   
         #wait
         time.sleep(self.turnTime)
         # stop both wheels
-        self.pwmRight.ChangeDutyCycle(0)
-        GPIO.output(self.dirRightPin, 1)
-        self.pwmLeft.ChangeDutyCycle(0)
+        self.pwmRightB.ChangeDutyCycle(0)
+        self.pwmLeftA.ChangeDutyCycle(0)
 
     def turnBack(self):
+        #stop both wheels
+        self.pwmLeftA.ChangeDutyCycle(0)
+        self.pwmRightA.ChangeDutyCycle(0)
         #turn right wheel backward
-        GPIO.output(self.dirRightPin, 0)
-        self.pwmRight.ChangeDutyCycle(self.turnSpeed)
+        self.pwmRightB.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel forward
-        self.pwmLeft.ChangeDutyCycle(self.turnSpeed)
+        self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)   
         #wait long
         time.sleep(2*self.turnTime)
         # stop both wheels
-        self.pwmRight.ChangeDutyCycle(0)
-        GPIO.output(self.dirRightPin, 1)
-        self.pwmLeft.ChangeDutyCycle(0)
+        self.pwmRightB.ChangeDutyCycle(0)
+        self.pwmLeftA.ChangeDutyCycle(0)
 
     def kill(self):
         # Reset GPIO settings
-        self.pwmLeft.stop()
-        self.pwmRight.stop()
+        self.pwmLeftA.stop()
+        self.pwmRightA.stop()
+        self.pwmLeftB.stop()
+        self.pwmRightB.stop()
         GPIO.cleanup()
         
     
