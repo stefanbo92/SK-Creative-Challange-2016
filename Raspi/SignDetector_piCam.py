@@ -41,7 +41,7 @@ class SignDetector():
 
         #get image, turn to grayscale, median blur and perform adaptive threshold 
         #ret,img=self.cap.read()
-        self.camera.capture(self.rawCapture, format="bgr")
+        self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)
         img = self.rawCapture.array
         #img=res = cv2.resize(img,(img.shape[1]/2, img.shape[1]/2), interpolation = cv2.INTER_CUBIC)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -191,7 +191,7 @@ if __name__ == '__main__':
     sd=SignDetector()
     while True:
         try:
-            sd.detect()
+            print sd.detect()
         except KeyboardInterrupt:
             sd.kill()
             raise
