@@ -12,14 +12,14 @@ if __name__ == '__main__':
         try:
             start=time.time()
             # check sensor readings
-            #ul,ur,uf =sr.getSensorReadings()      
-            #print ("Distance left: "+str(ul)+"cm")
+            ul,ur,uf =sr.getSensorReadings()      
+            print ("Distance left: "+str(ul)+"cm")
             #print ("Distance right: "+str(ur)+"cm")
             #print ("Distance front: "+str(uf)+"cm")
 
             # check motor movements
-            #mce.mc.turnLeft()
-            #mazaz.mc.turnRight()
+            #maze.mc.turnLeft()
+            #maze.mc.turnRight()
             #maze.mc.turnBack()
             #maze.mc.moveForward(5.5,0,0) # just goes straight, no adjusting
 
@@ -28,6 +28,7 @@ if __name__ == '__main__':
 
             #check sign detector
             #sd.grabImage()
+            '''
             print ("total time: "+str((time.time()-start)*1000)+"ms")
             maze.mc.moveForward(5.5,0,0)
             time.sleep(0.8)
@@ -35,6 +36,7 @@ if __name__ == '__main__':
             time.sleep(0.8)
             maze.mc.turnBack()
             time.sleep(0.8)
+            '''
         
 
         except KeyboardInterrupt:
