@@ -13,6 +13,8 @@ class MotorControl:
         self.forwardSpeed=40
         self.turnSpeed=20
         self.turnTime=0.45
+        self.wallDist=5
+        self.P=0.5
 
         #init all pins
         # vel=forward (A), dir=backward (B)
@@ -53,6 +55,17 @@ class MotorControl:
             #turn same speed
             self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
             self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+
+    def moveForwardControlled(self,ul,ur,uf):
+        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+        #control loop if distance to wall is not appropriate
+        if ul<10:
+            error=ul-self.wallDist
+            if error<=0:
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*-error),100]))
+            else:
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),100]))
 
     def turnLeft(self):
         #stop both wheels
