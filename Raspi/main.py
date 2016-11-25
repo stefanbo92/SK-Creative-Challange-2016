@@ -18,32 +18,26 @@ if __name__ == '__main__':
             #print ("Distance front: "+str(uf)+"cm")
 
             # check motor movements
-            #mc.mc.turnLeft()
-            #mc.mc.turnRight()
-            #mc.mc.turnBack()
-            #mc.mc.moveForward(5.5,0,0) # just goes straight, no adjusting
+            #mce.mc.turnLeft()
+            #mazaz.mc.turnRight()
+            #maze.mc.turnBack()
+            #maze.mc.moveForward(5.5,0,0) # just goes straight, no adjusting
 
             # autonomous maze movement
-            #mc.moveMaze(ul,ur,uf)
+            #maze.moveMaze(ul,ur,uf)
 
             #check sign detector
             #sd.grabImage()
-            
             print ("total time: "+str((time.time()-start)*1000)+"ms")
             maze.mc.moveForward(5.5,0,0)
-            time.sleep(0.7)
-            maze.mc.stop()
-            time.sleep(0.7)
+            time.sleep(0.8)
+            maze.mc.stop()        
+            time.sleep(0.8)
             maze.mc.turnBack()
-            time.sleep(0.7)
-            maze.mc.moveForward(5.5,0,0)
-            time.sleep(0.7)
-            maze.mc.stop()
-            time.sleep(0.7)
-            maze.mc.turnBack()
-            time.sleep(0.7)
+            time.sleep(0.8)
+        
 
         except KeyboardInterrupt:
-            mc.kill()
+            maze.kill()
             sr.kill()
             raise

@@ -10,9 +10,9 @@ class MotorControl:
 
     def __init__(self):
         #specify params
-        self.forwardSpeed=60
+        self.forwardSpeed=40
         self.turnSpeed=20
-        self.turnTime=0.4
+        self.turnTime=0.45
 
         #init all pins
         # vel=forward (A), dir=backward (B)
@@ -56,8 +56,7 @@ class MotorControl:
 
     def turnLeft(self):
         #stop both wheels
-        self.pwmLeftA.ChangeDutyCycle(0)
-        self.pwmRightA.ChangeDutyCycle(0)
+        self.stop()
         #turn right wheel forward
         self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel backward
@@ -70,8 +69,7 @@ class MotorControl:
 
     def turnRight(self):
         #stop both wheels
-        self.pwmLeftA.ChangeDutyCycle(0)
-        self.pwmRightA.ChangeDutyCycle(0)
+        self.stop()
         #turn right wheel backward
         self.pwmRightB.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel forward
@@ -84,24 +82,20 @@ class MotorControl:
 
     def turnBack(self):
         #stop both wheels
-        self.pwmLeftA.ChangeDutyCycle(0)
-        self.pwmRightA.ChangeDutyCycle(0)
+        self.stop()
         #turn right wheel backward
         self.pwmRightB.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel forward
         self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)   
         #wait long
-        time.sleep(2*self.turnTime)
+        time.sleep(1.86*self.turnTime)
         # stop both wheels
         self.pwmRightB.ChangeDutyCycle(0)
         self.pwmLeftA.ChangeDutyCycle(0)
 
     def kill(self):
         # Reset GPIO settings
-        self.pwmLeftA.stop()
-        self.pwmRightA.stop()
-        self.pwmLeftB.stop()
-        self.pwmRightB.stop()
+        self.stop()
         GPIO.cleanup()
         
     
