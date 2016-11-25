@@ -57,6 +57,7 @@ class MotorControl:
     def turnLeft(self):
         #stop both wheels
         self.stop()
+        time.sleep(0.3)
         #turn right wheel forward
         self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel backward
@@ -70,6 +71,7 @@ class MotorControl:
     def turnRight(self):
         #stop both wheels
         self.stop()
+        time.sleep(0.3)
         #turn right wheel backward
         self.pwmRightB.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel forward
@@ -83,6 +85,7 @@ class MotorControl:
     def turnBack(self):
         #stop both wheels
         self.stop()
+        time.sleep(0.3)
         #turn right wheel backward
         self.pwmRightB.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel forward
