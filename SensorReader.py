@@ -134,5 +134,6 @@ class SensorReader:
         GPIO.cleanup()
 
 sr=SensorReader(5)
-print sr.test(2,3)
-print sr.getSensorReadings()
+while True:
+    #print sr.test(2,3)
+    print sr.getSensorReadings()
