@@ -37,7 +37,7 @@ if __name__ == '__main__':
             maze.mc.turnBack()
             time.sleep(0.8)
             '''
-        
+            #time.sleep(0.5)
 
         except KeyboardInterrupt:
             maze.kill()
