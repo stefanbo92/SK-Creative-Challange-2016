@@ -4,16 +4,20 @@ import time
 import SignDetector
 
 if __name__ == '__main__':
+    filterLength=5
     maze=MazeControl.MazeControl()
-    sr=SensorReader.SensorReader(5)
+    sr=SensorReader.SensorReader(filterLength)
     sd=SignDetector.SignDetector()
+    
+    #init filter
+    for i in range(filterLength/2+1):
+        ul,ur,uf =sr.getSensorReadings()
 	
     while True:
         try:
             start=time.time()
             # check sensor readings
             ul,ur,uf =sr.getSensorReadings()
-            #time.sleep(0.100)
             print ("Distance left: "+str(ul)+"cm")
             #print ("Distance right: "+str(ur)+"cm")
             #print ("Distance front: "+str(uf)+"cm")
@@ -25,6 +29,7 @@ if __name__ == '__main__':
             #maze.mc.turnBack()
             #maze.mc.moveForward(ul,0,0)
             #maze.mc.moveForwardControlled(ul,0,0)
+            maze.mc.makeRightStep()
 
             # autonomous maze movement
             #maze.moveMaze(ul,ur,uf)
@@ -40,7 +45,8 @@ if __name__ == '__main__':
             time.sleep(0.8)
             '''
             
-            print ("total time: "+str((time.time()-start)*1000)+"ms")
+            #print ("total time: "+str((time.time()-start)*1000)+"ms")
+            time.sleep(3)
 
         except KeyboardInterrupt:
             maze.kill()
