@@ -11,10 +11,10 @@ class MotorControl:
     def __init__(self):
         #specify params
         self.forwardSpeed=40
-        self.turnSpeed=20
+        self.turnSpeed=35
         self.turnTime=0.45
-        self.wallDist=5
-        self.P=0.5
+        self.wallDist=15
+        self.P=0.05
 
         #init all pins
         # vel=forward (A), dir=backward (B)
@@ -45,28 +45,34 @@ class MotorControl:
         self.pwmRightB.ChangeDutyCycle(0)
         
     def moveForward(self,ul,ur,uf):
-        if ul<5:
+        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+        if ul<self.wallDist:
             #turn left wheel more
-            self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)
-        elif ul>6 and ul<20:
+            self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed*1.2)
+            print "going right!"
+        elif ul>self.wallDist and ul<50:
             #turn right wheel more
-            self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
-        else:
-            #turn same speed
-            self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-            self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+            self.pwmRightA.ChangeDutyCycle(self.forwardSpeed*1.2)
+            print "going left!"
 
     def moveForwardControlled(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
         #control loop if distance to wall is not appropriate
-        if ul<10:
+        if ul<50:
             error=ul-self.wallDist
             if error<=0:
-                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*-error),100]))
+                print "going right"
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*-error),self.forwardSpeed*1.4,100]))
             else:
-                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),100]))
+                print "going left"
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),self.forwardSpeed*1.4,100]))
 
+    def moveBack(self):
+        self.pwmLeftB.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightB.ChangeDutyCycle(self.forwardSpeed)
+        
     def turnLeft(self):
         #stop both wheels
         self.stop()
