@@ -14,7 +14,9 @@ class MotorControl:
         self.turnSpeed=35
         self.turnTime=0.45
         self.wallDist=20
+        self.errorOld=0
         self.P=0.1
+        self.D=0.05
 
         #init all pins
         # vel=forward (A), dir=backward (B)
@@ -43,8 +45,7 @@ class MotorControl:
         self.pwmRightA.ChangeDutyCycle(0)
         self.pwmLeftB.ChangeDutyCycle(0)
         self.pwmRightB.ChangeDutyCycle(0)
-
-        
+      
     def moveForward(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
@@ -70,6 +71,21 @@ class MotorControl:
                 print ("going left with "+str(self.P*error))
                 self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),self.forwardSpeed*1.4,100]))
 
+    def moveForwardControlledPD(self,ul,ur,uf):
+        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+        #control loop if distance to wall is not appropriate
+        if ul<50:
+            error=ul-self.wallDist
+            u=self.P*error+self.D*(error-self.errorOld)
+            if u<=0:
+                print ("going right with "+str(self.P*-error))
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.forwardSpeed*1.4,100]))
+            else:
+                print ("going left with "+str(self.P*error))
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*1.4,100]))
+            self.errorOld=error
+            
     def moveBack(self):
         self.pwmLeftB.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightB.ChangeDutyCycle(self.forwardSpeed)
@@ -85,8 +101,8 @@ class MotorControl:
         #wait
         time.sleep(self.turnTime)
         # stop both wheels
-        self.pwmRightA.ChangeDutyCycle(0)
-        self.pwmLeftB.ChangeDutyCycle(0)
+        self.stop()
+        time.sleep(0.3)
 
     def turnRight(self):
         #stop both wheels
@@ -99,8 +115,8 @@ class MotorControl:
         #wait
         time.sleep(self.turnTime)
         # stop both wheels
-        self.pwmRightB.ChangeDutyCycle(0)
-        self.pwmLeftA.ChangeDutyCycle(0)
+        self.stop()
+        time.sleep(0.3)
 
     def turnBack(self):
         #stop both wheels
@@ -113,14 +129,14 @@ class MotorControl:
         #wait long
         time.sleep(1.86*self.turnTime)
         # stop both wheels
-        self.pwmRightB.ChangeDutyCycle(0)
-        self.pwmLeftA.ChangeDutyCycle(0)
+        self.stop()
+        time.sleep(0.3)
 
     def kill(self):
         # Reset GPIO settings
         self.stop()
         GPIO.cleanup()
         
-    
+
 
 
