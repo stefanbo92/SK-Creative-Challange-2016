@@ -13,8 +13,8 @@ class MotorControl:
         self.forwardSpeed=20
         self.turnSpeed=35
         self.turnTime=0.45
-        self.wallDist=18.9
-        self.P=0.01
+        self.wallDist=20
+        self.P=0.1
 
         #init all pins
         # vel=forward (A), dir=backward (B)
@@ -44,37 +44,17 @@ class MotorControl:
         self.pwmLeftB.ChangeDutyCycle(0)
         self.pwmRightB.ChangeDutyCycle(0)
 
-    def makeRightStep(self):
-        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
-        time.sleep(5)
-        '''
-        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed*1.4)
-        time.sleep(0.5)
-        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-        time.sleep(1)
-        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed*1.4)
-        time.sleep(0.5)
-        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
-        time.sleep(1)
-        '''
-        self.stop()
         
     def moveForward(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
         if ul<(self.wallDist-1):
             #turn left wheel more
-            #self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed*1.2)
+            self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed*1.3)
             print "going right!"
-            self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed*1.2)
-            time.sleep(0.1)
-            self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-            time.sleep(0.2)
-            
         elif ul>(self.wallDist+1) and ul<50:
             #turn right wheel more
-            #self.pwmRightA.ChangeDutyCycle(self.forwardSpeed*1.2)
+            self.pwmRightA.ChangeDutyCycle(self.forwardSpeed*1.3)
             print "going left!"
 
     def moveForwardControlled(self,ul,ur,uf):
