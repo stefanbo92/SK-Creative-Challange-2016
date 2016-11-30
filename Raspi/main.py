@@ -18,7 +18,8 @@ if __name__ == '__main__':
             start=time.time()
             # check sensor readings
             ul,ur,uf =sr.getSensorReadings()
-            print ("Distance left: "+str(ul)+"cm")
+            print (str(ul)+" "+str(ur)+" "+str(uf))
+            #print ("Distance left: "+str(ul)+"cm")
             #print ("Distance right: "+str(ur)+"cm")
             #print ("Distance front: "+str(uf)+"cm")
 
@@ -27,11 +28,13 @@ if __name__ == '__main__':
             #maze.mc.moveBack()
             #maze.mc.turnRight()
             #maze.mc.turnBack()
-            #maze.mc.moveForward(ul,0,0)
-            maze.mc.moveForwardControlled(ul,0,0)
-            #maze.mc.makeRightStep()
+            
+            #maze.mc.moveForward(ul,ur,0)
+            #maze.mc.moveForwardControlled(ul,ur,0)
+            maze.mc.moveForwardControlledPD(ul,ur,0)
 
             # autonomous maze movement
+            #maze.moveDefault()
             #maze.moveMaze(ul,ur,uf)
 
             #check sign detector
@@ -46,8 +49,8 @@ if __name__ == '__main__':
             time.sleep(0.8)
             '''
 
-            time.sleep(0.2)
-            print ("total time: "+str((time.time()-start)*1000)+"ms")
+            #time.sleep(0.2)
+            #print ("total time: "+str((time.time()-start)*1000)+"ms")
             
 
         except KeyboardInterrupt:
