@@ -15,14 +15,16 @@ class MotorControl:
         self.turnTime=0.32
         self.wallDist=5
         self.errorOld=0
+        self.errorIntegrated=0
         '''
-        #working!!!
+        #working PD control!!!
         self.P=0.2
         self.D=1.5
         '''
 
         self.P=0.1
         self.D=3.5
+        self.I=0
         #init all pins
         # vel=forward (A), dir=backward (B)
         '''
@@ -82,19 +84,49 @@ class MotorControl:
                 print ("going left with "+str(1+self.P*error))
                 self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),self.forwardSpeed*1.4,100]))
 
-    def moveForwardControlledPD(self,ul,ur,uf):
+    def moveForwardControlledPID(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
         #control loop if distance to wall is not appropriate
         if ul<20:
             error=ul-self.wallDist
-            u=self.P*error+self.D*(error-self.errorOld)
+            self.errorIntegrated+=error
+            u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
             if u<=0:
                 print ("going right with "+str((1-u)))
                 self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.forwardSpeed*9.4,100]))
             else:
                 print ("going left with "+str((1+u)))
                 self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
+            self.errorOld=error
+
+    def moveForwardControlledPIDboth(self,ul,ur,uf):
+        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+        #preliminary check of both ul and ur?
+        
+        #control loop if distance to left wall is not appropriate
+        if ul<20:
+            error=ul-self.wallDist
+            self.errorIntegrated+=error
+            u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
+            if u<=0:
+                print ("going right with "+str((1-u)))
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.forwardSpeed*9.4,100]))
+            else:
+                print ("going left with "+str((1+u)))
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
+            self.errorOld=error
+        elif ur<20:
+            error=ur-self.wallDist
+            self.errorIntegrated+=error
+            u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
+            if u<=0:
+                print ("going left with "+str((1-u)))
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.forwardSpeed*9.4,100]))
+            else:
+                print ("going right with "+str((1+u)))
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
             self.errorOld=error
             
     def moveBack(self):

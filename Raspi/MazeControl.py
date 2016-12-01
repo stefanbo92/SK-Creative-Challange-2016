@@ -39,7 +39,9 @@ class MazeControl:
         # 2: right sign detected
         # 3: front sign detected
         # 4: backward sign detected
-        self.detectionMode=0  
+        self.detectionMode=0
+        self.detectionCount=0
+        self.detectionStep=20
 
 
     #refreshing SensorReadings
@@ -69,7 +71,13 @@ class MazeControl:
             self.detectionMode=0
         else:
             #make sign detection
-            #self.detectionMode=self.sd.detect()
+##            if self.detectionCount==self.detectionStep:
+##                self.detectionCount=0
+##                self.mc.stop()
+##                #time.sleep(0.2)
+##                self.detectionMode=self.sd.detect()
+##            self.detectionCount+=1
+            
             self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
@@ -78,7 +86,7 @@ class MazeControl:
         print (str(ul)+" "+str(ur)+" "+str(uf))
         
         if uf>10.2: #opt:5.5cm
-            self.mc.moveForwardControlledPD(ul,ur,uf)
+            self.mc.moveForwardControlledPID(ul,ur,uf)
             #self.mc.moveForwardControlled(ul,ur,uf)
         elif ul>15:
             self.mc.turnLeft()
@@ -92,19 +100,20 @@ class MazeControl:
 
     # left sign detected: go straight until you can turn left, then turn
     def keepLeft(self,ul,ur,uf):
-        if ul<15:
+        if ul<20:
             self.mc.moveForward(ul,ur,uf)
         else:
-            #time.sleep(0.3)
+            time.sleep(self.delayTime)
             self.mc.turnLeft()
             self.refreshSensors()
             self.detectionMode=0
 
     # right sign detected: go straight until you can turn right, then turn
     def keepRight(self,ul,ur,uf):
-        if ur<15:
+        if ur<20:
             self.mc.moveForward(ul,ur,uf)
         else:
+            time.sleep(self.delayTime)
             self.mc.turnRight()
             self.refreshSensors()
             self.detectionMode=0
@@ -113,6 +122,7 @@ class MazeControl:
         # Reset GPIO settings
         self.mc.kill()
         self.sd.kill()
+        self.sr.kill()
         
     
 
