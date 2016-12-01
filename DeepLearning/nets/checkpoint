@@ -1,0 +1,4 @@
+model_checkpoint_path: "/home/stefan/work/maleChildren/DeepLearning/nets/signs_fc.ckpt-8"
+all_model_checkpoint_paths: "/home/stefan/work/maleChildren/DeepLearning/nets/signs_fc.ckpt-6"
+all_model_checkpoint_paths: "/home/stefan/work/maleChildren/DeepLearning/nets/signs_fc.ckpt-7"
+all_model_checkpoint_paths: "/home/stefan/work/maleChildren/DeepLearning/nets/signs_fc.ckpt-8"
