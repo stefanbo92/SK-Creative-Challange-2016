@@ -2,11 +2,11 @@ import initVars as iV
 import os
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import datetime
 import sys
 import cv2
-from scipy.misc import  imread,imresize
+#from scipy.misc import  imread,imresize
 import operator
 import time
 import math
@@ -126,7 +126,8 @@ while(True):
 
     #classify with DNN
     for i in range(len(warpedSquares)):
-        img_gray_resize=imresize(warpedSquares[i], [128, 128])/255.
+        #img_gray_resize=imresize(warpedSquares[i], [128, 128])/255.
+        img_gray_resize=cv2.resize(warpedSquares[i], (128, 128))/255.
         img_grayvec   = np.reshape(img_gray_resize, (1, -1))
         predictiton=sess.run(tf.nn.softmax(pred), feed_dict={x: img_grayvec,keepratio:1.}) #make prediction
         #print (predictiton)
