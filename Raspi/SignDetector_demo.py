@@ -29,6 +29,8 @@ class SignDetector():
     #simple function to keep cap buffer updated
     def grabImage(self):
         ret,img=self.cap.read()
+        cv2.imshow("Image", img)
+        cv2.waitKey(1)
         
     def detect(self):
         start_time = time.time()

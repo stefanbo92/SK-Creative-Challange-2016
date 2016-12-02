@@ -37,8 +37,9 @@ class MazeControl:
         # 0: default (no sign detected)
         # 1: left sign detected
         # 2: right sign detected
-        # 3: front sign detected
+        # 3: treasure
         # 4: backward sign detected
+        # 5: bomb
         self.detectionMode=0
         self.detectionCount=0
         self.detectionStep=20
@@ -51,7 +52,9 @@ class MazeControl:
             
     # ul, ur, uf are filtered ultrasonic distances in cm of left,
     # right and front sensor
-    def moveMaze(self,ul,ur,uf):
+    def moveMaze(self):
+        #get sensor readings
+        ul,ur,uf=self.sr.getSensorReadings()
         #update buffer
         self.sd.grabImage()
 
@@ -63,12 +66,27 @@ class MazeControl:
             # algorithm for keeping right
             self.keepRight(ul,ur,uf)
         elif self.detectionMode==3:
-            #move default
-            self.moveDefault(ul,ur,uf)
+            #move towards treasure and play sound
+            if uf>15:
+                self.mc.moveForwardControlledPID(ul,ur,uf)
+            else:
+                #play win sound
+                self.mc.stop()
+                self.mc.turnBack()
+                self.mc.turnBack()
+                self.detectionMode=0
         elif self.detectionMode==4:
             #turn around
             self.mc.turnBack()
             self.detectionMode=0
+        elif self.detectionMode==4:
+            #move until bomb explodes
+            if uf>12:
+                self.mc.moveForwardControlledPID(ul,ur,uf)
+            else:
+                #play explode sound
+                self.mc.turnBack()
+                self.detectionMode=0
         else:
             #make sign detection
 ##            if self.detectionCount==self.detectionStep:
@@ -81,10 +99,7 @@ class MazeControl:
             self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
-    def moveDefault(self):
-        ul,ur,uf=self.sr.getSensorReadings()
-        print (str(ul)+" "+str(ur)+" "+str(uf))
-        
+    def moveDefault(self,ul,ur,uf):
         if uf>10.2: #opt:5.5cm
             self.mc.moveForwardControlledPID(ul,ur,uf)
             #self.mc.moveForwardControlled(ul,ur,uf)

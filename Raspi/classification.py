@@ -2,6 +2,7 @@
 
 import cv2
 import numpy as np
+import tensorflow as tf
 
 class SignClassifier:
 
@@ -12,6 +13,8 @@ class SignClassifier:
         self.template.append(cv2.imread("sign_detection/templates/1.png",0))
         self.template.append(cv2.imread("sign_detection/templates/2.png",0))
         self.template.append(cv2.imread("sign_detection/templates/3.png",0))
+
+    #simple computer vision classification   
     def classify(self,img):
         out=[]
         # loop through all warped images
@@ -25,6 +28,11 @@ class SignClassifier:
                 corr.append(max_val)
             # save correlation value for each template for every image
             out.append(corr)
+        return out
+    
+    #classification with deep neural net
+    def classifyDNN(self,img):
+        out=[]
         return out
 
 
