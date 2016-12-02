@@ -58,6 +58,12 @@ class MotorControl:
         self.pwmRightA.ChangeDutyCycle(0)
         self.pwmLeftB.ChangeDutyCycle(0)
         self.pwmRightB.ChangeDutyCycle(0)
+
+    def stopHard(self):
+        self.pwmLeftA.ChangeDutyCycle(100)
+        self.pwmRightA.ChangeDutyCycle(100)
+        self.pwmLeftB.ChangeDutyCycle(100)
+        self.pwmRightB.ChangeDutyCycle(100)
       
     def moveForward(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)

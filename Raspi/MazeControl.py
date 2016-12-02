@@ -67,7 +67,7 @@ class MazeControl:
             self.keepRight(ul,ur,uf)
         elif self.detectionMode==3:
             #move towards treasure and play sound
-            if uf>15:
+            if uf>15: #go until sign is close enough
                 self.mc.moveForwardControlledPID(ul,ur,uf)
             else:
                 #play win sound
@@ -81,13 +81,13 @@ class MazeControl:
             self.detectionMode=0
         elif self.detectionMode==4:
             #move until bomb explodes
-            if uf>12:
+            if uf>15: #go until sign is close enough
                 self.mc.moveForwardControlledPID(ul,ur,uf)
             else:
                 #play explode sound
                 self.mc.turnBack()
                 self.detectionMode=0
-        else:
+        else: #default mode
             #make sign detection
 ##            if self.detectionCount==self.detectionStep:
 ##                self.detectionCount=0
