@@ -79,6 +79,7 @@ class SensorReader:
         # read the raw distance values in cm
         valueLeft=self.readUltrasonic(self.triggerLeft,self.echoLeft)
         valueRight=self.readUltrasonic(self.triggerRight,self.echoRight)
+        time.sleep(0.005)
         valueFront=self.readUltrasonic(self.triggerFront,self.echoFront)
         # save the sensor readings in an array and return it
         values=np.array([valueLeft,valueRight,valueFront])

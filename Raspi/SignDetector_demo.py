@@ -5,7 +5,8 @@ import time
 import classification
 import operator
 import math
-from pygame import mixer 
+from pygame import mixer
+import SignDetector
 
 
 #PARAMS
@@ -13,7 +14,7 @@ saveSize=100
 numContrours=1000
 approxAccuracy=0.03
 
-class SignDetector():
+class SignDetectorTest():
 
     def __init__(self):
         #init VideoCapture and SignClassifier
@@ -182,13 +183,15 @@ class SignDetector():
     
 
 if __name__ == '__main__':
-    sd=SignDetector()
+    sdt=SignDetectorTest()
+    sd=SignDetector.SignDetector()
 
     while True:
         try:
             print sd.detect()
 
         except KeyboardInterrupt:
+            sdt.kill()
             sd.kill()
             raise
         

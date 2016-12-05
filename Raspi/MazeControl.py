@@ -55,8 +55,9 @@ class MazeControl:
     def moveMaze(self):
         #get sensor readings
         ul,ur,uf=self.sr.getSensorReadings()
-        #update buffer
-        self.sd.grabImage()
+        print (str(ul)+" "+str(ur)+" "+str(uf))
+        #update video buffer
+        #self.sd.grabImage()
 
         #check current state
         if self.detectionMode==1:
@@ -92,25 +93,30 @@ class MazeControl:
             if self.detectionCount==self.detectionStep:
                 self.detectionCount=0
                 print "taking image!"
-                #self.mc.stop()
+                self.mc.stop()
                 #time.sleep(0.2)
-                #self.detectionMode=self.sd.detect()
+                self.detectionMode=self.sd.detect()
             self.detectionCount+=1
             
             self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
     def moveDefault(self,ul,ur,uf):
-        if uf>10.2: #opt:5.5cm
-            self.mc.moveForwardControlledPID(ul,ur,uf)
+        if uf>11.2: #opt:5.5cm
+            self.mc.moveForwardControlledPIDboth(ul,ur,uf)
+            #self.mc.moveForwardControlledPID(ul,ur,uf)
             #self.mc.moveForwardControlled(ul,ur,uf)
         elif ul>15:
             self.mc.turnLeft()
             self.refreshSensors()
         elif ur>15:
+            self.mc.stopHard()
             self.mc.turnRight()
             self.refreshSensors()
         else:
+            #print "STOP!"
+            #self.mc.stop()
+            #self.mc.stopHard()
             self.mc.turnBack()
             self.refreshSensors()
 

@@ -36,7 +36,7 @@ class SignDetector():
         #get image, turn to grayscale, median blur and perform adaptive threshold 
         ret,img=self.cap.read()
         #crop image [y1:y2,x1:x2]
-        img=img[1:400, 200:500]
+        img=img[0:480, 100:500]
         #rotate image
         rows,cols,ch =img.shape
         M = cv2.getRotationMatrix2D((cols/2,rows/2),90,1)

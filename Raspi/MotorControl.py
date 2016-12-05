@@ -12,6 +12,7 @@ class MotorControl:
         #specify params
         self.forwardSpeed=20
         self.turnSpeed=30
+        self.maxSpeed=1.8*self.forwardSpeed
         self.turnTime=0.32
         self.wallDist=5
         self.errorOld=0
@@ -20,11 +21,19 @@ class MotorControl:
         #working PD control!!!
         self.P=0.2
         self.D=1.5
-        '''
 
         self.P=0.1
         self.D=3.5
-        self.I=0
+        '''
+
+        self.P=0.1
+        self.I=0.0
+        self.D=10
+
+        #evaluation
+        self.totalErr=0
+        self.count=0
+        
         #init all pins
         # vel=forward (A), dir=backward (B)
         '''
@@ -87,11 +96,11 @@ class MotorControl:
             error=ul-self.wallDist
             if error<=0:
                 print ("going right with "+str(1+self.P*-error))
-                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*-error),self.forwardSpeed*1.4,100]))
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*-error),self.maxSpeed,100]))
             else:
                 print ("going left with "+str(1+self.P*error))
-                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),self.forwardSpeed*1.4,100]))
-
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),self.maxSpeed,100]))
+    '''
     def moveForwardControlledPID(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
@@ -102,28 +111,34 @@ class MotorControl:
             u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
             if u<=0:
                 print ("going right with "+str((1-u)))
-                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.forwardSpeed*9.4,100]))
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.maxSpeed,100]))
             else:
                 print ("going left with "+str((1+u)))
-                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.maxSpeed,100]))
             self.errorOld=error
+    '''
+    def test(self):
+        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)
 
     def moveForwardControlledPIDboth(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)
         #preliminary check of both ul and ur?
         
         #control loop if distance to left wall is not appropriate
-        if ul<20:
+        if ul<20:# and ul >4:
             error=ul-self.wallDist
+            self.totalErr+=abs(error)
+            self.count+=1
             self.errorIntegrated+=error
             u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
             if u<=0:
                 print ("going right with "+str((1-u)))
-                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.forwardSpeed*9.4,100]))
+                self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1-u),self.maxSpeed,100]))
             else:
                 print ("going left with "+str((1+u)))
-                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
+                self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.maxSpeed,100]))
             self.errorOld=error
         elif ur<20:
             error=ur-self.wallDist
@@ -189,6 +204,7 @@ class MotorControl:
         # Reset GPIO settings
         self.stop()
         GPIO.cleanup()
+        print ("Total average error is: "+str(self.totalErr/self.count))
         
 
 

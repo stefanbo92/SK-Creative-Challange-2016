@@ -17,8 +17,8 @@ if __name__ == '__main__':
         try:
             start=time.time()
             # check sensor readings
-            ul,ur,uf =sr.getSensorReadings()
-            print (str(ul)+" "+str(ur)+" "+str(uf))
+            #ul,ur,uf =sr.getSensorReadings()
+            #print (str(ul)+" "+str(ur)+" "+str(uf))
             #print ("Distance left: "+str(ul)+"cm")
             #print ("Distance right: "+str(ur)+"cm")
             #print ("Distance front: "+str(uf)+"cm")
@@ -26,20 +26,21 @@ if __name__ == '__main__':
             # check motor movements
             #maze.mc.turnLeft()
             #maze.mc.moveBack()
+            #maze.mc.test()
             #maze.mc.turnRight()
             #maze.mc.turnBack()
             
             #maze.mc.moveForward(ul,ur,0)
             #maze.mc.moveForwardControlled(ul,ur,0)
-            maze.mc.moveForwardControlledPD(ul,ur,0)
+            #maze.mc.moveForwardControlledPID(ul,ur,0)
 
             # autonomous maze movement
-            #maze.moveDefault()
-            #maze.moveMaze(ul,ur,uf)
+            #maze.moveDefault(maze.mc.wallDist,maze.mc.wallDist,uf)
+            #maze.moveMaze()
 
             #check sign detector
             #sd.grabImage()
-            #sd.detect()
+            print sd.detect()
             '''
             maze.mc.moveForward(5.5,0,0)
             time.sleep(0.8)
@@ -49,8 +50,8 @@ if __name__ == '__main__':
             time.sleep(0.8)
             '''
 
-            #time.sleep(0.2)
-            #print ("total time: "+str((time.time()-start)*1000)+"ms")
+            #time.sleep(0.5)
+            print ("total time: "+str((time.time()-start)*1000)+"ms")
             
 
         except KeyboardInterrupt:
