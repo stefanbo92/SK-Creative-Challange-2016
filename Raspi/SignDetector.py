@@ -39,7 +39,7 @@ class SignDetector():
         img=img[0:480, 100:500]
         #rotate image
         rows,cols,ch =img.shape
-        M = cv2.getRotationMatrix2D((cols/2,rows/2),90,1)
+        M = cv2.getRotationMatrix2D((cols/2,rows/2),270,1)
         img = cv2.warpAffine(img,M,(cols,rows))
         #img=res = cv2.resize(img,(img.shape[0]/2, img.shape[1]/2), interpolation = cv2.INTER_CUBIC)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -123,10 +123,10 @@ class SignDetector():
             ret2,otsu = cv2.threshold(blurSign,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             warpedSquares.append(otsu)
             #save image
-##            cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
-##            self.saveCount+=1
-##            if self.saveCount>50:
-##                self.saveCount=0
+            ##cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
+            ##self.saveCount+=1
+            ##if self.saveCount>50:
+            ##    self.saveCount=0
 
 
         #start_correlation = time.time()
@@ -141,7 +141,7 @@ class SignDetector():
             #print "Correlations:"
             print correlations [i]
             #print ("min value: "+str(value))
-            if value< 2500: #if value>0.95:
+            if value< 800: #if value>0.95:
                 className=""
                 output=index+1
 ##                if index==0:  

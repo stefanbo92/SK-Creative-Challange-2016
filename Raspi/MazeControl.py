@@ -23,6 +23,7 @@ class MazeControl:
     def __init__(self):
         #create Motor controller
         self.filterLength=5
+        self.delayTime=0.2
         self.mc=MotorControl.MotorControl()
         self.sd=SignDetector.SignDetector()
         self.sr=SensorReader.SensorReader(self.filterLength)
@@ -40,9 +41,9 @@ class MazeControl:
         # 3: treasure
         # 4: backward sign detected
         # 5: bomb
-        self.detectionMode=0
-        self.detectionCount=0
-        self.detectionStep=20
+        self.detectionMode=0    
+        self.detectionStep=5#20
+        self.detectionCount=self.detectionStep
 
 
     #refreshing SensorReadings
@@ -56,8 +57,24 @@ class MazeControl:
         #get sensor readings
         ul,ur,uf=self.sr.getSensorReadings()
         print (str(ul)+" "+str(ur)+" "+str(uf))
+        print ("detection mode: "+str(self.detectionMode))
         #update video buffer
         #self.sd.grabImage()
+
+        #make sign detection
+        if self.detectionCount==self.detectionStep:
+            self.detectionCount=0
+            print "taking image!"
+            #self.mc.stopHard()
+            self.mc.stop()
+            #time.sleep(0.5)
+            for i in range(5):
+                self.sd.grabImage()
+            if self.detectionMode==0:
+                self.detectionMode=0#self.sd.detect()
+            else:
+                self.sd.detect()
+        self.detectionCount+=1
 
         #check current state
         if self.detectionMode==1:
@@ -89,20 +106,13 @@ class MazeControl:
                 self.mc.turnBack()
                 self.detectionMode=0
         else: #default mode
-            #make sign detection
-            if self.detectionCount==self.detectionStep:
-                self.detectionCount=0
-                print "taking image!"
-                self.mc.stop()
-                #time.sleep(0.2)
-                self.detectionMode=self.sd.detect()
-            self.detectionCount+=1
+            
             
             self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
     def moveDefault(self,ul,ur,uf):
-        if uf>11.2: #opt:5.5cm
+        if uf>10.2: #opt:5.5cm
             self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             #self.mc.moveForwardControlledPID(ul,ur,uf)
             #self.mc.moveForwardControlled(ul,ur,uf)
@@ -135,7 +145,9 @@ class MazeControl:
         if ur<20:
             self.mc.moveForward(ul,ur,uf)
         else:
+            #self.mc.stopHard()
             time.sleep(self.delayTime)
+            self.mc.stopHard()
             self.mc.turnRight()
             self.refreshSensors()
             self.detectionMode=0

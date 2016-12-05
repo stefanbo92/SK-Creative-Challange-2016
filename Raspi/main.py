@@ -7,7 +7,7 @@ if __name__ == '__main__':
     filterLength=5
     maze=MazeControl.MazeControl()
     sr=SensorReader.SensorReader(filterLength)
-    sd=SignDetector.SignDetector()
+    #sd=SignDetector.SignDetector()
     
     #init filter
     for i in range(filterLength/2+1):
@@ -36,11 +36,11 @@ if __name__ == '__main__':
 
             # autonomous maze movement
             #maze.moveDefault(maze.mc.wallDist,maze.mc.wallDist,uf)
-            #maze.moveMaze()
+            maze.moveMaze()
 
             #check sign detector
             #sd.grabImage()
-            print sd.detect()
+            #print sd.detect()
             '''
             maze.mc.moveForward(5.5,0,0)
             time.sleep(0.8)
@@ -57,4 +57,5 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             maze.kill()
             sr.kill()
+            sd.kill()
             raise
