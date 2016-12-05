@@ -35,7 +35,13 @@ class SignDetector():
 
         #get image, turn to grayscale, median blur and perform adaptive threshold 
         ret,img=self.cap.read()
-        #img=res = cv2.resize(img,(img.shape[1]/2, img.shape[1]/2), interpolation = cv2.INTER_CUBIC)
+        #crop image [y1:y2,x1:x2]
+        img=img[1:400, 200:500]
+        #rotate image
+        rows,cols,ch =img.shape
+        M = cv2.getRotationMatrix2D((cols/2,rows/2),90,1)
+        img = cv2.warpAffine(img,M,(cols,rows))
+        #img=res = cv2.resize(img,(img.shape[0]/2, img.shape[1]/2), interpolation = cv2.INTER_CUBIC)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         blur = cv2.medianBlur(gray,5)
         thresh = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)

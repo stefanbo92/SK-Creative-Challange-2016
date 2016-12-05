@@ -89,12 +89,13 @@ class MazeControl:
                 self.detectionMode=0
         else: #default mode
             #make sign detection
-##            if self.detectionCount==self.detectionStep:
-##                self.detectionCount=0
-##                self.mc.stop()
-##                #time.sleep(0.2)
-##                self.detectionMode=self.sd.detect()
-##            self.detectionCount+=1
+            if self.detectionCount==self.detectionStep:
+                self.detectionCount=0
+                print "taking image!"
+                #self.mc.stop()
+                #time.sleep(0.2)
+                #self.detectionMode=self.sd.detect()
+            self.detectionCount+=1
             
             self.moveDefault(ul,ur,uf)
 
