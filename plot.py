@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def plotError(errorVec)
+def plotError(errorVec):
     zeroVec=[]
     contVec=[]
 
@@ -12,3 +12,5 @@ def plotError(errorVec)
     plt.ylabel('error')
     plt.xlabel('timestep')
     plt.show()
+
+plotError([0,0.9,0.2,1.3,-0.2,-1,0,0.3])

@@ -213,7 +213,7 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
-    def plotError(errorVec)
+    def plotError(errorVec):
         zeroVec=[]
         contVec=[]
 
