@@ -1,5 +1,6 @@
 import time
 import RPi.GPIO as GPIO
+import matplotlib.pyplot as plt
 
 # Use BCM GPIO references
 # instead of physical pin numbers
@@ -31,6 +32,7 @@ class MotorControl:
         self.D=10
 
         #evaluation
+        self.errorVec=[]
         self.totalErr=0
         self.count=0
         
@@ -52,12 +54,12 @@ class MotorControl:
         GPIO.setup(self.dirRightPin,GPIO.OUT)
 
         # init PWM pins
-        self.pwmLeftA=GPIO.PWM(self.velLeftPin, 50) # 50Hz PWM
-        self.pwmRightA=GPIO.PWM(self.velRightPin, 50)
+        self.pwmLeftA=GPIO.PWM(self.velLeftPin, 500) # 500Hz PWM
+        self.pwmRightA=GPIO.PWM(self.velRightPin, 500)
         self.pwmLeftA.start(0)
         self.pwmRightA.start(0)
-        self.pwmLeftB=GPIO.PWM(self.dirLeftPin, 50) # 50Hz PWM
-        self.pwmRightB=GPIO.PWM(self.dirRightPin, 50)
+        self.pwmLeftB=GPIO.PWM(self.dirLeftPin, 500) # 500Hz PWM
+        self.pwmRightB=GPIO.PWM(self.dirRightPin, 500)
         self.pwmLeftB.start(0)
         self.pwmRightB.start(0)
         
@@ -129,8 +131,11 @@ class MotorControl:
         #control loop if distance to left wall is not appropriate
         if ul<20:# and ul >4:
             error=ul-self.wallDist
+            ### Evaluation
             self.totalErr+=abs(error)
+            self.errorVec.append(error)
             self.count+=1
+            ### 
             self.errorIntegrated+=error
             u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
             if u<=0:
@@ -142,6 +147,11 @@ class MotorControl:
             self.errorOld=error
         elif ur<20:
             error=ur-self.wallDist
+            ### Evaluation
+            self.totalErr+=abs(error)
+            self.errorVec.append(error)
+            self.count+=1
+            ### 
             self.errorIntegrated+=error
             u=self.P*error+self.D*(error-self.errorOld)+self.I*self.errorIntegrated
             if u<=0:
@@ -203,11 +213,25 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
+    def plotError(errorVec)
+        zeroVec=[]
+        contVec=[]
+
+        for i in range(len(errorVec)):
+            zeroVec.append(0)
+            contVec.append(i)
+            
+        plt.plot(contVec,errorVec,contVec,zeroVec)
+        plt.ylabel('error')
+        plt.xlabel('timestep')
+        plt.show()
+
     def kill(self):
         # Reset GPIO settings
         self.stop()
         GPIO.cleanup()
         print ("Total average error is: "+str(self.totalErr/self.count))
+        plotError(self.errorVec)
         
 
 
