@@ -23,8 +23,9 @@ class MazeControl:
     def __init__(self):
         #create Motor controller
         self.filterLength=5
-        self.delayTime=0.2
-        self.frontDist=8.2
+        #self.delayTime=0.3
+        self.delaySteps=8
+        self.frontDist=7.2
         self.mc=MotorControl.MotorControl()
         self.sd=SignDetector.SignDetector()
         self.sr=SensorReader.SensorReader(self.filterLength)
@@ -143,7 +144,8 @@ class MazeControl:
             if ul<20:
                 self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             else:
-                time.sleep(self.delayTime)
+                for i in range(self.delaySteps):
+                    self.mc.moveForwardControlledPIDboth(ul,ur,uf)
                 self.mc.turnLeft()
                 self.refreshSensors()
                 self.detectionMode=0
@@ -158,7 +160,11 @@ class MazeControl:
             if ur<20:
                 self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             else:
-                time.sleep(self.delayTime)
+                #self.mc.moveFront()
+                #time.sleep(self.delayTime)
+                for i in range(self.delaySteps):
+                    self.mc.moveForwardControlledPIDboth(ul,ur,uf)
+                    time.sleep(0.08)
                 self.mc.turnRight()
                 self.refreshSensors()
                 self.detectionMode=0

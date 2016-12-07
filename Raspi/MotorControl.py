@@ -171,6 +171,10 @@ class MotorControl:
     def moveBack(self):
         self.pwmLeftB.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightB.ChangeDutyCycle(self.forwardSpeed)
+
+    def moveFront(self):
+        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)
         
     def turnLeft(self):
         #stop both wheels
