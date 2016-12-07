@@ -14,7 +14,7 @@ class MotorControl:
         self.forwardSpeed=20
         self.turnSpeed=30
         self.maxSpeed=1.8*self.forwardSpeed
-        self.turnTime=0.28#0.32 1.71
+        self.turnTime=0.32#0.32 1.71
         self.wallDist=5
         self.errorOld=0
         self.errorIntegrated=0
@@ -28,11 +28,12 @@ class MotorControl:
         '''
 
         self.P=0.1
-        self.I=0.0001
-        self.D=10
+        self.I=0.0
+        self.D=6
 
         #evaluation
         self.errorVec=[]
+        self.ulVec=[]
         self.totalErr=0
         self.count=0
         
@@ -134,6 +135,7 @@ class MotorControl:
             ### Evaluation
             self.totalErr+=abs(error)
             self.errorVec.append(error)
+            self.ulVec.append(ul)
             self.count+=1
             ### 
             self.errorIntegrated+=error
@@ -213,15 +215,17 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
-    def plotError(self,errorVec):
+    def plotError(self,errorVec,ulVec):
         zeroVec=[]
+        wallVec=[]
         contVec=[]
 
         for i in range(len(errorVec)):
             zeroVec.append(0)
+            wallVec.append(self.wallDist)
             contVec.append(i)
             
-        plt.plot(contVec,errorVec,contVec,zeroVec)
+        plt.plot(contVec,errorVec,contVec,zeroVec,contVec,ulVec,contVec,wallVec)
         plt.ylabel('error')
         plt.xlabel('timestep')
         plt.show()
@@ -231,7 +235,7 @@ class MotorControl:
         self.stop()
         GPIO.cleanup()
         print ("Total average error is: "+str(self.totalErr/self.count))
-        self.plotError(self.errorVec)
+        self.plotError(self.errorVec,self.ulVec)
         
 
 

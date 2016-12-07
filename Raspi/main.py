@@ -51,7 +51,7 @@ if __name__ == '__main__':
             '''
 
             #time.sleep(0.5)
-            print ("total time: "+str((time.time()-start)*1000)+"ms")
+            #print ("total time: "+str((time.time()-start)*1000)+"ms")
             
 
         except KeyboardInterrupt:

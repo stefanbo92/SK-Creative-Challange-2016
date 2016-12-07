@@ -42,7 +42,7 @@ class MazeControl:
         # 4: backward sign detected
         # 5: bomb
         self.detectionMode=0    
-        self.detectionStep=5#20
+        self.detectionStep=5000000#20
         self.detectionCount=self.detectionStep
 
 
