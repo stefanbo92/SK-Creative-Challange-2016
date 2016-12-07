@@ -213,7 +213,7 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
-    def plotError(errorVec):
+    def plotError(self,errorVec):
         zeroVec=[]
         contVec=[]
 
@@ -231,7 +231,7 @@ class MotorControl:
         self.stop()
         GPIO.cleanup()
         print ("Total average error is: "+str(self.totalErr/self.count))
-        plotError(self.errorVec)
+        self.plotError(self.errorVec)
         
 
 
