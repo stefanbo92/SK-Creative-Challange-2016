@@ -24,6 +24,7 @@ class MazeControl:
         #create Motor controller
         self.filterLength=5
         self.delayTime=0.2
+        self.frontDist=10.2
         self.mc=MotorControl.MotorControl()
         self.sd=SignDetector.SignDetector()
         self.sr=SensorReader.SensorReader(self.filterLength)
@@ -61,7 +62,7 @@ class MazeControl:
         #update video buffer
         #self.sd.grabImage()
 
-        #make sign detection
+        #make sign detection each 'self.detectionStep' step
         if self.detectionCount==self.detectionStep:
             self.detectionCount=0
             print "taking image!"
@@ -77,13 +78,13 @@ class MazeControl:
         self.detectionCount+=1
 
         #check current state
-        if self.detectionMode==1:
+        if self.detectionMode==1: #turn left
             # algorithm for keeping left
             self.keepLeft(ul,ur,uf)
-        elif self.detectionMode==2:
+        elif self.detectionMode==2: #turn right
             # algorithm for keeping right
             self.keepRight(ul,ur,uf)
-        elif self.detectionMode==3:
+        elif self.detectionMode==3: #treasure detected
             #move towards treasure and play sound
             if uf>15: #go until sign is close enough
                 self.mc.moveForwardControlledPID(ul,ur,uf)
@@ -93,62 +94,72 @@ class MazeControl:
                 self.mc.turnBack()
                 self.mc.turnBack()
                 self.detectionMode=0
-        elif self.detectionMode==4:
+        elif self.detectionMode==4: #go back
             #turn around
             self.mc.turnBack()
             self.detectionMode=0
-        elif self.detectionMode==4:
+        elif self.detectionMode==5: #bomb found
             #move until bomb explodes
             if uf>15: #go until sign is close enough
                 self.mc.moveForwardControlledPID(ul,ur,uf)
             else:
                 #play explode sound
+                time.sleep(2)
                 self.mc.turnBack()
                 self.detectionMode=0
-        else: #default mode
-            
-            
+        else: #default mode       
             self.moveDefault(ul,ur,uf)
 
     # default mode: just go straight until a wall appears in front of robot
     def moveDefault(self,ul,ur,uf):
-        if uf>10.2: #opt:5.5cm
+        if uf>self.frontDist: #opt:5.5cm
             self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             #self.mc.moveForwardControlledPID(ul,ur,uf)
             #self.mc.moveForwardControlled(ul,ur,uf)
         elif ul>15:
             self.mc.turnLeft()
             self.refreshSensors()
+            self.detectionMode=0
         elif ur>15:
             self.mc.stopHard()
             self.mc.turnRight()
             self.refreshSensors()
+            self.detectionMode=0
         else:
             #print "STOP!"
             #self.mc.stop()
             #self.mc.stopHard()
             self.mc.turnBack()
             self.refreshSensors()
+            self.detectionMode=0
 
     # left sign detected: go straight until you can turn left, then turn
     def keepLeft(self,ul,ur,uf):
-        if ul<20:
-            self.mc.moveForward(ul,ur,uf)
+        if uf>self.frontDist:
+            if ul<20:
+                self.mc.moveForwardControlledPIDboth(ul,ur,uf)
+            else:
+                time.sleep(self.delayTime)
+                self.mc.turnLeft()
+                self.refreshSensors()
+                self.detectionMode=0
         else:
-            time.sleep(self.delayTime)
-            self.mc.turnLeft()
+            self.mc.turnBack()
             self.refreshSensors()
             self.detectionMode=0
 
     # right sign detected: go straight until you can turn right, then turn
     def keepRight(self,ul,ur,uf):
-        if ur<20:
-            self.mc.moveForward(ul,ur,uf)
+        if uf>self.frontDist:
+            if ur<20:
+                self.mc.moveForwardControlledPIDboth(ul,ur,uf)
+            else:
+                time.sleep(self.delayTime)
+                self.mc.turnRight()
+                self.refreshSensors()
+                self.detectionMode=0
         else:
-            #self.mc.stopHard()
-            time.sleep(self.delayTime)
-            self.mc.stopHard()
-            self.mc.turnRight()
+            self.mc.turnBack()
             self.refreshSensors()
             self.detectionMode=0
 

@@ -78,7 +78,8 @@ class MotorControl:
         self.pwmRightB.ChangeDutyCycle(100)
         time.sleep(0.5)
         self.stop()
-      
+
+    '''  
     def moveForward(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
@@ -103,7 +104,7 @@ class MotorControl:
             else:
                 print ("going left with "+str(1+self.P*error))
                 self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+self.P*error),self.maxSpeed,100]))
-    '''
+    
     def moveForwardControlledPID(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed)
