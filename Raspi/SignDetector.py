@@ -141,7 +141,7 @@ class SignDetector():
             #print "Correlations:"
             print correlations [i]
             #print ("min value: "+str(value))
-            if value< 800: #if value>0.95:
+            if value< 1200: #if value>0.95:
                 className=""
                 output=index+1
 ##                if index==0:  
@@ -160,15 +160,15 @@ class SignDetector():
         # show images and print time
         #cv2.imshow("Image", img)
         #cv2.imshow("Thresh", threshImg)
-        #cv2.imshow("warp", warp)    
-        print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000)) 
-        print ("_________________________")
+        #cv2.imshow("warp", warp)     
+        #print ("_________________________")
         cv2.waitKey(1)
         if output != 0:
             mixer.music.load("sounds/"+str(index+1)+'.mp3')
             mixer.music.play()
 ##            while mixer.music.get_busy() == True:
 ##                self.grabImage()
+        print("Time SignDetection: %s milliseconds" % ((time.time() - start_time)*1000))
         return output
 
     def orderCorners(self,corners):

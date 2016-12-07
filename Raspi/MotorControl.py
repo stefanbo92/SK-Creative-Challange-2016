@@ -11,10 +11,10 @@ class MotorControl:
 
     def __init__(self):
         #specify params
-        self.forwardSpeed=20
+        self.forwardSpeed=30
         self.turnSpeed=30
-        self.maxSpeed=1.8*self.forwardSpeed
-        self.turnTime=0.32#0.32 1.71
+        self.maxSpeed=1.9*self.forwardSpeed
+        self.turnTime=0.35#0.32 1.71
         self.wallDist=5
         self.errorOld=0
         self.errorIntegrated=0
@@ -27,13 +27,13 @@ class MotorControl:
         self.D=3.5
         '''
 
-        self.P=0.1
-        self.I=0.0
-        self.D=6
+        self.P=0.15
+        self.I=0.00
+        self.D=15
 
         #evaluation
         self.errorVec=[]
-        self.ulVec=[]
+        self.urVec=[]
         self.totalErr=0
         self.count=0
         
@@ -136,7 +136,7 @@ class MotorControl:
             ### Evaluation
             self.totalErr+=abs(error)
             self.errorVec.append(error)
-            self.ulVec.append(ul)
+            self.urVec.append(ur)
             self.count+=1
             ### 
             self.errorIntegrated+=error
@@ -164,9 +164,9 @@ class MotorControl:
                 print ("going right with "+str((1+u)))
                 self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
             self.errorOld=error
-        #time.sleep(0.05)
-        #self.stop()
-        #time.sleep(0.1)
+        time.sleep(0.05)
+        self.stop()
+        #time.sleep(0.07)
             
     def moveBack(self):
         self.pwmLeftB.ChangeDutyCycle(self.forwardSpeed)
@@ -216,7 +216,7 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
-    def plotError(self,errorVec,ulVec):
+    def plotError(self,errorVec,urVec):
         zeroVec=[]
         wallVec=[]
         contVec=[]
@@ -226,7 +226,7 @@ class MotorControl:
             wallVec.append(self.wallDist)
             contVec.append(i)
             
-        plt.plot(contVec,errorVec,contVec,zeroVec,contVec,ulVec,contVec,wallVec)
+        plt.plot(contVec,errorVec,contVec,zeroVec)#,contVec,urVec,contVec,wallVec)
         plt.ylabel('error')
         plt.xlabel('timestep')
         plt.show()
@@ -236,7 +236,7 @@ class MotorControl:
         self.stop()
         GPIO.cleanup()
         print ("Total average error is: "+str(self.totalErr/self.count))
-        self.plotError(self.errorVec,self.ulVec)
+        #self.plotError(self.errorVec,self.urVec)
         
 
 

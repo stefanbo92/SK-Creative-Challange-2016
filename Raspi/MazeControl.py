@@ -24,7 +24,7 @@ class MazeControl:
         #create Motor controller
         self.filterLength=5
         self.delayTime=0.2
-        self.frontDist=10.2
+        self.frontDist=8.2
         self.mc=MotorControl.MotorControl()
         self.sd=SignDetector.SignDetector()
         self.sr=SensorReader.SensorReader(self.filterLength)
@@ -43,7 +43,7 @@ class MazeControl:
         # 4: backward sign detected
         # 5: bomb
         self.detectionMode=0    
-        self.detectionStep=5000000#20
+        self.detectionStep=3#20
         self.detectionCount=self.detectionStep
 
 
@@ -69,12 +69,16 @@ class MazeControl:
             #self.mc.stopHard()
             self.mc.stop()
             #time.sleep(0.5)
-            for i in range(5):
-                self.sd.grabImage()
+            #for i in range(5):
+             #   self.sd.grabImage()
             if self.detectionMode==0:
-                self.detectionMode=0#self.sd.detect()
+                self.detectionMode=self.sd.detect()
             else:
-                self.sd.detect()
+                self.sd.grabImage()
+                time.sleep(0.08)
+        else:
+            self.sd.grabImage()
+            time.sleep(0.08)
         self.detectionCount+=1
 
         #check current state
@@ -87,7 +91,7 @@ class MazeControl:
         elif self.detectionMode==3: #treasure detected
             #move towards treasure and play sound
             if uf>15: #go until sign is close enough
-                self.mc.moveForwardControlledPID(ul,ur,uf)
+                self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             else:
                 #play win sound
                 self.mc.stop()
@@ -101,7 +105,7 @@ class MazeControl:
         elif self.detectionMode==5: #bomb found
             #move until bomb explodes
             if uf>15: #go until sign is close enough
-                self.mc.moveForwardControlledPID(ul,ur,uf)
+                self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             else:
                 #play explode sound
                 time.sleep(2)
