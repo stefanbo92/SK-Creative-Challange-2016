@@ -184,11 +184,11 @@ class SignDetectorTest():
 
 if __name__ == '__main__':
     sdt=SignDetectorTest()
-    sd=SignDetector.SignDetector()
+    #sd=SignDetector.SignDetector()
 
     while True:
         try:
-            print sd.detect()
+            print sdt.detect()
 
         except KeyboardInterrupt:
             sdt.kill()
