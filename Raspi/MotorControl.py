@@ -12,9 +12,9 @@ class MotorControl:
     def __init__(self):
         #specify params
         self.forwardSpeed=30
-        self.turnSpeed=30
+        self.turnSpeed=40
         self.maxSpeed=1.9*self.forwardSpeed
-        self.turnTime=0.35#0.32 1.71
+        self.turnTime=0.38#0.32 1.71
         self.wallDist=5
         self.errorOld=0
         self.errorIntegrated=0
@@ -164,8 +164,8 @@ class MotorControl:
                 print ("going right with "+str((1+u)))
                 self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
             self.errorOld=error
-        time.sleep(0.05)
-        self.stop()
+        #time.sleep(0.1)#time.sleep(0.05)
+        #self.stop()
         #time.sleep(0.07)
             
     def moveBack(self):
@@ -178,9 +178,9 @@ class MotorControl:
         
     def turnLeft(self):
         #stop both wheels
-        #self.stop()
-        #time.sleep(0.3)
-        self.stopHard()
+        self.stop()
+        time.sleep(0.3)
+        #self.stopHard()
         #turn right wheel forward
         self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel backward
@@ -188,9 +188,9 @@ class MotorControl:
         #wait
         time.sleep(self.turnTime)
         # stop both wheels
-        #self.stop()
-        #time.sleep(0.3)
-        self.stopHard()
+        self.stop()
+        time.sleep(0.3)
+        #self.stopHard()
 
     def turnRight(self):
         #stop both wheels
