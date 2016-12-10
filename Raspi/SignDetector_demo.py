@@ -120,10 +120,10 @@ class SignDetectorTest():
             ret2,otsu = cv2.threshold(blurSign,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             warpedSquares.append(otsu)
             #save image
-##            cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
-##            self.saveCount+=1
-##            if self.saveCount>50:
-##                self.saveCount=0
+            cv2.imwrite("img/"+str(self.saveCount)+".png",otsu)
+            self.saveCount+=1
+            if self.saveCount>500:
+                self.saveCount=0
 
 
         #start_correlation = time.time()
@@ -149,6 +149,8 @@ class SignDetectorTest():
                     className="treasure"
                 elif index ==3:
                     className="back"
+                elif index ==4:
+                    className="bomb"
                 else:
                     className="???"
                 cv2.putText(img, className, (int(filteredBoxes[i][0][0]),int(filteredBoxes[i][0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,0),2)
@@ -163,9 +165,9 @@ class SignDetectorTest():
         cv2.waitKey(1)
         if output != 0:
             mixer.music.load("sounds/"+str(index+1)+'.mp3')
-            mixer.music.play()
-            while mixer.music.get_busy() == True:
-                self.grabImage()
+##            mixer.music.play()
+##            while mixer.music.get_busy() == True:
+##                self.grabImage()
         return output
 
     def orderCorners(self,corners):

@@ -13,6 +13,7 @@ class SignClassifier:
         self.template.append(cv2.imread("sign_detection/templates/1.png",0))
         self.template.append(cv2.imread("sign_detection/templates/2.png",0))
         self.template.append(cv2.imread("sign_detection/templates/3.png",0))
+        self.template.append(cv2.imread("sign_detection/templates/4.png",0))
 
     #simple computer vision classification   
     def classify(self,img):
