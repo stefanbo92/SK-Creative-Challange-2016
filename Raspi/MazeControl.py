@@ -1,14 +1,7 @@
 ##
 ##    The class MazeControl will make the robot move through the maze.
 ##    In order to use it just create a MazeControl object and constantly
-##    call moveMaze(ul,ur,uf), where ul, ur and uf are filtered ultrasonic
-##    distances in cm of left, right and front sensor:
-##
-##        mc=MazeControl()
-##        sr=SensorReader(5)
-##        while True:
-##            ul,ur,uf =sr.getSensorReadings()
-##            mc.moveMaze(ul,ur,uf)
+##    call moveMaze().
 ##
    
 import time
@@ -160,8 +153,6 @@ class MazeControl:
             if ur<20:
                 self.mc.moveForwardControlledPIDboth(ul,ur,uf)
             else:
-                #self.mc.moveFront()
-                #time.sleep(self.delayTime)
                 for i in range(self.delaySteps):
                     self.mc.moveForwardControlledPIDboth(ul,ur,uf)
                     time.sleep(0.08)

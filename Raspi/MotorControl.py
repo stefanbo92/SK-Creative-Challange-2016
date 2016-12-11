@@ -20,9 +20,6 @@ class MotorControl:
         self.errorIntegrated=0
         '''
         #working PD control!!!
-        self.P=0.2
-        self.D=1.5
-
         self.P=0.1
         self.D=3.5
         '''
@@ -37,7 +34,7 @@ class MotorControl:
         self.totalErr=0
         self.count=0
         
-        #init all pins
+        #init all GPIO pins
         # vel=forward (A), dir=backward (B)
         '''
         self.velLeftPin=9 #pin21
@@ -64,13 +61,14 @@ class MotorControl:
         self.pwmLeftB.start(0)
         self.pwmRightB.start(0)
         
-
+    #stop all wheels
     def stop(self):
         self.pwmLeftA.ChangeDutyCycle(0)
         self.pwmRightA.ChangeDutyCycle(0)
         self.pwmLeftB.ChangeDutyCycle(0)
         self.pwmRightB.ChangeDutyCycle(0)
 
+    #make a hard stop on all wheels
     def stopHard(self):
         self.pwmLeftA.ChangeDutyCycle(100)
         self.pwmRightA.ChangeDutyCycle(100)
@@ -121,15 +119,10 @@ class MotorControl:
                 self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.maxSpeed,100]))
             self.errorOld=error
     '''
-    def test(self):
-        self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)
 
     def moveForwardControlledPIDboth(self,ul,ur,uf):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
-        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)
-        #preliminary check of both ul and ur?
-        
+        self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)       
         #control loop if distance to left wall is not appropriate
         if ul<20:# and ul >4:
             error=ul-self.wallDist
@@ -167,20 +160,22 @@ class MotorControl:
         #time.sleep(0.1)#time.sleep(0.05)
         #self.stop()
         #time.sleep(0.07)
-            
+
+    # move both wheels backward        
     def moveBack(self):
         self.pwmLeftB.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightB.ChangeDutyCycle(self.forwardSpeed)
 
+    #move both wheels forward
     def moveFront(self):
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)
-        
+
+    #make a turn to the left   
     def turnLeft(self):
         #stop both wheels
         self.stop()
         time.sleep(0.3)
-        #self.stopHard()
         #turn right wheel forward
         self.pwmRightA.ChangeDutyCycle(self.turnSpeed)
         #turn left wheel backward
@@ -190,8 +185,8 @@ class MotorControl:
         # stop both wheels
         self.stop()
         time.sleep(0.3)
-        #self.stopHard()
 
+    #make a turn to the right
     def turnRight(self):
         #stop both wheels
         self.stop()
@@ -206,6 +201,7 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
+    #make a 180 degree turn
     def turnBack(self):
         #stop both wheels
         self.stop()
@@ -220,6 +216,8 @@ class MotorControl:
         self.stop()
         time.sleep(0.3)
 
+    # function for plotting the distance of the robot to the wall
+    # this can be used for evaluation and parameter tuning
     def plotError(self,errorVec,urVec):
         zeroVec=[]
         wallVec=[]

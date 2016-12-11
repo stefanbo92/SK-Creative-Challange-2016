@@ -41,16 +41,8 @@ if __name__ == '__main__':
             #check sign detector
             #sd.grabImage()
             #print sd.detect()
-            '''
-            maze.mc.moveForward(5.5,0,0)
-            time.sleep(0.8)
-            maze.mc.stop()        
-            time.sleep(0.8)
-            maze.mc.turnBack()
-            time.sleep(0.8)
-            '''
 
-            #time.sleep(0.5)
+            #check time
             #print ("total time: "+str((time.time()-start)*1000)+"ms")
             #print ("____________________")
             
