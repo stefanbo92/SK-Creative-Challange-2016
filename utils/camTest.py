@@ -3,9 +3,9 @@ cap=cv2.VideoCapture(0)
 
 while (True):
     ret,img=cap.read()
-    #print img.shape
+    print img.shape
     #crop image [y1:y2,x1:x2]
-    img=img[0:480, 100:500]
+    img=img[0:480, 100:640]#[0:480, 100:500]
     #rotate image
     rows,cols,ch =img.shape
     print img.shape
