@@ -141,7 +141,7 @@ class SignDetector():
             #print "Correlations:"
             print correlations [i]
             #print ("min value: "+str(value))
-            if value< 1200: #if value>0.95:
+            if value< 1000: #if value>0.95:
                 className=""
                 output=index+1
 ##                if index==0:  

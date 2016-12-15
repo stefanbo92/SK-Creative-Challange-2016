@@ -15,10 +15,10 @@ class MazeControl:
 
     def __init__(self):
         #create Motor controller
-        self.filterLength=5
+        self.filterLength=3
         #self.delayTime=0.3
-        self.delaySteps=8
-        self.frontDist=7.2
+        self.delaySteps=5
+        self.frontDist=8.2
         self.mc=MotorControl.MotorControl()
         self.sd=SignDetector.SignDetector()
         self.sr=SensorReader.SensorReader(self.filterLength)
@@ -69,10 +69,10 @@ class MazeControl:
                 self.detectionMode=self.sd.detect()
             else:
                 self.sd.grabImage()
-                time.sleep(0.01)#time.sleep(0.08)
+                #time.sleep(0.01)#time.sleep(0.08)
         else:
             self.sd.grabImage()
-            time.sleep(0.01)#time.sleep(0.08)
+            #time.sleep(0.01)#time.sleep(0.08)
         self.detectionCount+=1
 
         #check current state

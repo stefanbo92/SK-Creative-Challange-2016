@@ -14,7 +14,7 @@ class MotorControl:
         self.forwardSpeed=30
         self.turnSpeed=40
         self.maxSpeed=1.9*self.forwardSpeed
-        self.turnTime=0.38#0.32 1.71
+        self.turnTime=0.40#0.32 1.71
         self.wallDist=5
         self.errorOld=0
         self.errorIntegrated=0
@@ -124,7 +124,7 @@ class MotorControl:
         self.pwmLeftA.ChangeDutyCycle(self.forwardSpeed)
         self.pwmRightA.ChangeDutyCycle(self.forwardSpeed+3)       
         #control loop if distance to left wall is not appropriate
-        if ul<20:# and ul >4:
+        if ul<20 and ul >3:
             error=ul-self.wallDist
             ### Evaluation
             self.totalErr+=abs(error)
@@ -141,6 +141,7 @@ class MotorControl:
                 print ("going left with "+str((1+u)))
                 self.pwmRightA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.maxSpeed,100]))
             self.errorOld=error
+            time.sleep(0.07)
         elif ur<20:
             error=ur-self.wallDist
             ### Evaluation
@@ -157,8 +158,11 @@ class MotorControl:
                 print ("going right with "+str((1+u)))
                 self.pwmLeftA.ChangeDutyCycle(min([self.forwardSpeed*(1+u),self.forwardSpeed*9.4,100]))
             self.errorOld=error
-        #time.sleep(0.1)#time.sleep(0.05)
-        #self.stop()
+            time.sleep(0.07)
+        else:
+            time.sleep(0.05)
+        #time.sleep(0.08)#time.sleep(0.05)
+        self.stop()
         #time.sleep(0.07)
 
     # move both wheels backward        
@@ -211,7 +215,7 @@ class MotorControl:
         #turn left wheel forward
         self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)   
         #wait long
-        time.sleep(1.95*self.turnTime)
+        time.sleep(1.85*self.turnTime)
         # stop both wheels
         self.stop()
         time.sleep(0.3)
