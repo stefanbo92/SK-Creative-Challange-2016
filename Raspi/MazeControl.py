@@ -69,7 +69,7 @@ class MazeControl:
                 self.detectionMode=self.sd.detect()
             else:
                 self.sd.grabImage()
-                #time.sleep(0.01)#time.sleep(0.08)
+                time.sleep(0.01)#time.sleep(0.08)
         else:
             self.sd.grabImage()
             #time.sleep(0.01)#time.sleep(0.08)

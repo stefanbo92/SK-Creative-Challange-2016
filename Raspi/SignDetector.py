@@ -136,6 +136,7 @@ class SignDetector():
 
         #draw results into image
         output=0
+        indeces=[]
         for i in range(len(warpedSquares)):
             index, value=min(enumerate(correlations[i]), key=operator.itemgetter(1))
             #print "Correlations:"
