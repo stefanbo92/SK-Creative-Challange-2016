@@ -14,7 +14,7 @@ class MotorControl:
         self.forwardSpeed=30
         self.turnSpeed=40
         self.maxSpeed=1.9*self.forwardSpeed
-        self.turnTime=0.28#0.32 1.71
+        self.turnTime=0.30#0.32 1.71
         self.wallDist=5
         self.errorOld=0
         self.errorIntegrated=0
@@ -163,7 +163,7 @@ class MotorControl:
             time.sleep(0.05)
         #time.sleep(0.08)#time.sleep(0.05)
         self.stop()
-        time.sleep(0.03)
+        time.sleep(0.02)
 
     # move both wheels backward        
     def moveBack(self):
