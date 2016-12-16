@@ -50,5 +50,5 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             maze.kill()
             sr.kill()
-            sd.kill()
+            #sd.kill()
             raise
