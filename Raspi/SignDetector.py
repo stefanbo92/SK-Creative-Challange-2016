@@ -136,7 +136,7 @@ class SignDetector():
 
         #draw results into image
         output=0
-        indeces=[]
+        minVal=9999
         for i in range(len(warpedSquares)):
             index, value=min(enumerate(correlations[i]), key=operator.itemgetter(1))
             #print "Correlations:"
@@ -144,7 +144,9 @@ class SignDetector():
             #print ("min value: "+str(value))
             if value< 1000: #if value>0.95:
                 className=""
-                output=index+1
+                if value<minVal:
+                    minVal=value
+                    output=index+1
 ##                if index==0:  
 ##                    className="left"
 ##                elif index ==1:
