@@ -17,8 +17,8 @@ if __name__ == '__main__':
         try:
             start=time.time()
             # check sensor readings
-            #ul,ur,uf =sr.getSensorReadings()
-            #print (str(ul)+" "+str(ur)+" "+str(uf))
+            ul,ur,uf =sr.getSensorReadings()
+            print (str(ul)+" "+str(ur)+" "+str(uf))
             #print ("Distance left: "+str(ul)+"cm")
             #print ("Distance right: "+str(ur)+"cm")
             #print ("Distance front: "+str(uf)+"cm")
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
             # autonomous maze movement
             #maze.moveDefault(maze.mc.wallDist,maze.mc.wallDist,uf)
-            maze.moveMaze()
+            #maze.moveMaze()
 
             #check sign detector
             #sd.grabImage()
