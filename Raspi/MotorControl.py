@@ -160,7 +160,7 @@ class MotorControl:
             self.errorOld=error
             time.sleep(0.07)
         else:
-            time.sleep(0.05)
+            time.sleep(0.07)
         #time.sleep(0.08)#time.sleep(0.05)
         self.stop()
         time.sleep(0.02)
@@ -215,7 +215,7 @@ class MotorControl:
         #turn left wheel forward
         self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)   
         #wait long
-        time.sleep(1.80*self.turnTime)
+        time.sleep(1.76*self.turnTime)
         # stop both wheels
         self.stop()
         time.sleep(0.3)
