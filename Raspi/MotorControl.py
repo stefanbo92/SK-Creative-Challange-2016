@@ -13,8 +13,8 @@ class MotorControl:
         #specify params
         self.forwardSpeed=30
         self.turnSpeed=40
-        self.maxSpeed=1.9*self.forwardSpeed
-        self.turnTime=0.30#0.32 1.71
+        self.maxSpeed=1.7*self.forwardSpeed
+        self.turnTime=0.25#0.32 1.71
         self.wallDist=5
         self.errorOld=0
         self.errorIntegrated=0
@@ -215,7 +215,7 @@ class MotorControl:
         #turn left wheel forward
         self.pwmLeftA.ChangeDutyCycle(self.turnSpeed)   
         #wait long
-        time.sleep(1.76*self.turnTime)
+        time.sleep(1.8*self.turnTime)
         # stop both wheels
         self.stop()
         time.sleep(0.3)

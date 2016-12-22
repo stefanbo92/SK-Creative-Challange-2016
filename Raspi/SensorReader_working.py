@@ -27,7 +27,7 @@ class SensorReader:
         self.size=size
         self.readingsLeft=np.zeros(size)
         self.readingsRight=np.zeros(size)
-        self.readingsFront=np.zeros(size+2)
+        self.readingsFront=np.zeros(size)
 
         # Define GPIO to use on Pi
         self.triggerLeft=2 #pin3
@@ -65,7 +65,6 @@ class SensorReader:
         for i in reversed(xrange(self.size-1)):
             self.readingsLeft[i+1]=self.readingsLeft[i]
             self.readingsRight[i+1]=self.readingsRight[i]
-        for i in reversed(xrange(self.size+2-1)):
             self.readingsFront[i+1]=self.readingsFront[i]
         self.readingsLeft[0]=values[0]
         self.readingsRight[0]=values[1]
@@ -73,14 +72,14 @@ class SensorReader:
         filterLeft=np.sort(self.readingsLeft)
         filterRight=np.sort(self.readingsRight)
         filterFront=np.sort(self.readingsFront)
-        return filterLeft[self.size/2],filterRight[self.size/2],filterFront[(self.size+2)/2]
+        return filterLeft[self.size/2],filterRight[self.size/2],filterFront[self.size/2]
 
     # reads the GPIO pins and returns an array with unfiltered sensor readings
     def getCurrentValues(self):
         # read the raw distance values in cm
         valueLeft=self.readUltrasonic(self.triggerLeft,self.echoLeft)
         valueRight=self.readUltrasonic(self.triggerRight,self.echoRight)
-        time.sleep(0.01)
+        time.sleep(0.005)
         valueFront=self.readUltrasonic(self.triggerFront,self.echoFront)
         # save the sensor readings in an array and return it
         values=np.array([valueLeft,valueRight,valueFront])
